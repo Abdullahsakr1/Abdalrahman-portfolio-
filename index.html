@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- SEO Meta Tags -->
+  <title>Abdalrahman | Creative Graphic Designer</title>
+  <meta name="description" content="Abdalrahman - Creative graphic designer specializing in branding, social media design, motion graphics, and UI design using Adobe tools.">
+  <meta name="keywords" content="graphic designer, مصمم جرافيك, branding, تصميم, Adobe, Photoshop, Illustrator, After Effects, motion graphics, UI design, social media design, portfolio, creative designer, تصميم علامات تجارية, موشن جرافيك, تصميم سوشيال ميديا">
+  <meta name="author" content="Abdalrahman">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://abdalrahman.com">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://abdalrahman.com">
+  <meta property="og:title" content="Abdalrahman | Creative Graphic Designer">
+  <meta property="og:description" content="Professional graphic designer portfolio - branding, social media, motion graphics & UI design">
+  <meta property="og:image" content="images/hero-bg.png">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ar_EG">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Abdalrahman | Creative Graphic Designer">
+  <meta name="twitter:description" content="Professional graphic designer portfolio - branding, social media, motion graphics & UI design">
+  <meta name="twitter:image" content="images/hero-bg.png">
+
+  <!-- Hreflang for bilingual SEO -->
+  <link rel="alternate" hreflang="en" href="https://abdalrahman.com/?lang=en">
+  <link rel="alternate" hreflang="ar" href="https://abdalrahman.com/?lang=ar">
+  <link rel="alternate" hreflang="x-default" href="https://abdalrahman.com">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Abdalrahman",
+    "url": "https://abdalrahman.com",
+    "jobTitle": "Creative Graphic Designer",
+    "knowsAbout": ["Graphic Design", "Branding", "Motion Graphics", "UI Design", "Adobe Photoshop", "Adobe Illustrator", "Adobe After Effects"],
+    "sameAs": [
+      "https://linkedin.com/in/abdalrahman",
+      "https://behance.net/abdalrahman"
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ===================== LOADING SCREEN ===================== -->
+  <div class="loading-screen" id="loading-screen" aria-hidden="true">
+    <div class="loader"></div>
+    <span class="loading-text">Loading</span>
+  </div>
+
+  <!-- ===================== NAVIGATION ===================== -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container nav-content">
+      <a href="#" class="logo" aria-label="Abdalrahman - Home"><span>Abdal</span>rahman</a>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#home" data-i18n="nav.home" class="active">Home</a></li>
+        <li><a href="#about" data-i18n="nav.about">About</a></li>
+        <li><a href="#portfolio" data-i18n="nav.portfolio">Portfolio</a></li>
+        <li><a href="#certificates" data-i18n="nav.certificates">Certificates</a></li>
+        <li><a href="#services" data-i18n="nav.services">Services</a></li>
+        <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <div class="lang-switch" role="group" aria-label="Language switcher">
+          <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+          <button class="lang-btn" data-lang="ar" aria-label="Switch to Arabic">AR</button>
+        </div>
+        <div class="hamburger" id="hamburger" aria-label="Toggle menu" role="button" tabindex="0">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#home" data-i18n="nav.home">Home</a>
+    <a href="#about" data-i18n="nav.about">About</a>
+    <a href="#portfolio" data-i18n="nav.portfolio">Portfolio</a>
+    <a href="#certificates" data-i18n="nav.certificates">Certificates</a>
+    <a href="#services" data-i18n="nav.services">Services</a>
+    <a href="#contact" data-i18n="nav.contact">Contact</a>
+  </div>
+
+  <!-- ===================== HERO SECTION ===================== -->
+  <section class="hero section" id="home">
+    <canvas class="hero-canvas" id="hero-canvas"></canvas>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span data-i18n="hero.badge">Available for freelance work</span>
+      </div>
+      <h1 class="hero-title">
+        <span data-i18n="hero.title.line1">Creative</span><br>
+        <span class="highlight" data-i18n="hero.title.highlight">Graphic Designer</span><br>
+        <span data-i18n="hero.title.line2">Using Adobe Tools</span>
+      </h1>
+      <p class="hero-subtitle" data-i18n="hero.subtitle">
+        Transforming ideas into powerful visual experiences through creative design, branding, and motion graphics.
+      </p>
+      <a href="#portfolio" class="hero-cta">
+        <span data-i18n="hero.cta">View My Work</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14"/>
+          <path d="m12 5 7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="hero-scroll">
+      <span data-i18n="hero.scroll">Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT SECTION ===================== -->
+  <section class="section about" id="about">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag" data-i18n="about.tag">About Me</span>
+        <h2 class="section-title" data-i18n="about.title">Get To Know Me</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-image-wrapper reveal-left">
+          <div class="about-image">
+            <img src="images/profile.png" alt="Abdalrahman - Graphic Designer" loading="lazy" width="500" height="625">
+          </div>
+          <div class="about-float-badge" data-i18n="about.badge">5+ Years Experience</div>
+        </div>
+
+        <div class="about-text reveal-right">
+          <h3 data-i18n="about.name">Abdalrahman</h3>
+          <p class="about-role" data-i18n="about.role">Creative Graphic Designer & Visual Artist</p>
+          <p data-i18n="about.p1">
+            I'm a passionate graphic designer with over 5 years of experience in creating visually stunning designs. I specialize in branding, social media design, motion graphics, and UI design using Adobe Creative Suite.
+          </p>
+          <p data-i18n="about.p2">
+            My goal is to transform complex ideas into clear, beautiful, and impactful visual solutions that help brands stand out and connect with their audience.
+          </p>
+
+          <div class="skills-grid stagger-children">
+            <div class="skill-item">
+              <div class="skill-icon">
+                <svg viewBox="0 0 24 24"><path d="M19.3 3H4.7A1.7 1.7 0 003 4.7v14.6c0 .94.76 1.7 1.7 1.7h14.6c.94 0 1.7-.76 1.7-1.7V4.7c0-.94-.76-1.7-1.7-1.7zM9.2 17.2H7.4v-6.5h1.8v6.5zm6.9 0h-1.8V12l-2 5.2h-1L9.3 12v5.2H7.5V8.5h2l2 5.3 2-5.3h2.6v8.7z"/></svg>
+              </div>
+              <div>
+                <div class="skill-name" data-i18n="about.skill.ps">Photoshop</div>
+                <div class="skill-level" data-i18n="about.skill.level.expert">Expert</div>
+              </div>
+            </div>
+
+            <div class="skill-item">
+              <div class="skill-icon">
+                <svg viewBox="0 0 24 24"><path d="M19.3 3H4.7A1.7 1.7 0 003 4.7v14.6c0 .94.76 1.7 1.7 1.7h14.6c.94 0 1.7-.76 1.7-1.7V4.7c0-.94-.76-1.7-1.7-1.7zM14.5 17.2l-1.1-2.5h-3.8l-1.1 2.5H6.7l4-8.7h1.6l4 8.7h-1.8zm-2.5-6l-1.3 2.5h2.6L12 11.2z"/></svg>
+              </div>
+              <div>
+                <div class="skill-name" data-i18n="about.skill.ai">Illustrator</div>
+                <div class="skill-level" data-i18n="about.skill.level.expert">Expert</div>
+              </div>
+            </div>
+
+            <div class="skill-item">
+              <div class="skill-icon">
+                <svg viewBox="0 0 24 24"><path d="M19.3 3H4.7A1.7 1.7 0 003 4.7v14.6c0 .94.76 1.7 1.7 1.7h14.6c.94 0 1.7-.76 1.7-1.7V4.7c0-.94-.76-1.7-1.7-1.7zM14 17.2l-1-2.5h-3l-1 2.5H7.5l3.5-8.7h1.5l-1.5 3.8-.5 1.2H14l-.5-1.2-1.5-3.8h1.5l3.5 8.7H14z"/></svg>
+              </div>
+              <div>
+                <div class="skill-name" data-i18n="about.skill.ae">After Effects</div>
+                <div class="skill-level" data-i18n="about.skill.level.advanced">Advanced</div>
+              </div>
+            </div>
+
+            <div class="skill-item">
+              <div class="skill-icon">
+                <svg viewBox="0 0 24 24"><path d="M19.3 3H4.7A1.7 1.7 0 003 4.7v14.6c0 .94.76 1.7 1.7 1.7h14.6c.94 0 1.7-.76 1.7-1.7V4.7c0-.94-.76-1.7-1.7-1.7zM14 12.5h-1.5v4.7H10.5v-4.7H9v-2h1.5V8.5h2v2H14v2z"/></svg>
+              </div>
+              <div>
+                <div class="skill-name" data-i18n="about.skill.pr">Premiere Pro</div>
+                <div class="skill-level" data-i18n="about.skill.level.advanced">Advanced</div>
+              </div>
+            </div>
+
+            <div class="skill-item">
+              <div class="skill-icon">
+                <svg viewBox="0 0 24 24"><path d="M19.3 3H4.7A1.7 1.7 0 003 4.7v14.6c0 .94.76 1.7 1.7 1.7h14.6c.94 0 1.7-.76 1.7-1.7V4.7c0-.94-.76-1.7-1.7-1.7zM12 17.2H9.5V8.5H12c2 0 3.5 1 3.5 2.6 0 1.1-.7 2-1.8 2.3l2.3 3.8h-2.2l-2-3.5h-.8v3.5zm0-5.4h.5c1 0 1.5-.5 1.5-1.2s-.5-1.2-1.5-1.2H12v2.4z"/></svg>
+              </div>
+              <div>
+                <div class="skill-name" data-i18n="about.skill.id">InDesign</div>
+                <div class="skill-level" data-i18n="about.skill.level.advanced">Advanced</div>
+              </div>
+            </div>
+
+            <div class="skill-item">
+              <div class="skill-icon">
+                <svg viewBox="0 0 24 24"><path d="M19.3 3H4.7A1.7 1.7 0 003 4.7v14.6c0 .94.76 1.7 1.7 1.7h14.6c.94 0 1.7-.76 1.7-1.7V4.7c0-.94-.76-1.7-1.7-1.7zM15.5 17.2h-2l-1.5-3-1.5 3h-2l2.5-4.4-2.3-4.3h2l1.3 2.8 1.3-2.8h2l-2.3 4.3 2.5 4.4z"/></svg>
+              </div>
+              <div>
+                <div class="skill-name" data-i18n="about.skill.xd">Adobe XD</div>
+                <div class="skill-level" data-i18n="about.skill.level.advanced">Advanced</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PORTFOLIO SECTION ===================== -->
+  <section class="section" id="portfolio">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag" data-i18n="portfolio.tag">Portfolio</span>
+        <h2 class="section-title" data-i18n="portfolio.title">Featured Projects</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="portfolio-filters reveal">
+        <button class="filter-btn active" data-filter="all" data-i18n="filter.all">All</button>
+        <button class="filter-btn" data-filter="branding" data-i18n="filter.branding">Branding</button>
+        <button class="filter-btn" data-filter="social" data-i18n="filter.social">Social Media</button>
+        <button class="filter-btn" data-filter="motion" data-i18n="filter.motion">Motion</button>
+        <button class="filter-btn" data-filter="ui" data-i18n="filter.ui">UI Design</button>
+        <button class="filter-btn" data-filter="video" data-i18n="filter.video">Video</button>
+        <button class="filter-btn" data-filter="print" data-i18n="filter.print">Print</button>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="portfolio-grid stagger-children">
+        <!-- Project 1 - Branding -->
+        <article class="project-card" data-category="branding" id="project-1">
+          <div class="project-image">
+            <img src="images/project-branding.png" alt="Luxury brand identity design" loading="lazy" width="600" height="375">
+            <div class="project-overlay">
+              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-category" data-i18n="project1.cat">Branding</span>
+            <h3 class="project-title" data-i18n="project1.title">Luxury Brand Identity</h3>
+            <p class="project-desc" data-i18n="project1.desc">Complete brand identity design including logo, business cards, and stationery for a luxury fashion brand.</p>
+          </div>
+        </article>
+
+        <!-- Project 2 - Social Media -->
+        <article class="project-card" data-category="social" id="project-2">
+          <div class="project-image">
+            <img src="images/project-social.png" alt="Restaurant social media campaign" loading="lazy" width="600" height="375">
+            <div class="project-overlay">
+              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-category" data-i18n="project2.cat">Social Media</span>
+            <h3 class="project-title" data-i18n="project2.title">Restaurant Social Campaign</h3>
+            <p class="project-desc" data-i18n="project2.desc">Vibrant social media campaign design with cohesive visual storytelling for a modern restaurant.</p>
+          </div>
+        </article>
+
+        <!-- Project 3 - Motion -->
+        <article class="project-card" data-category="motion" id="project-3">
+          <div class="project-image">
+            <img src="images/project-motion.png" alt="3D motion graphics showreel" loading="lazy" width="600" height="375">
+            <div class="project-overlay">
+              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-category" data-i18n="project3.cat">Motion</span>
+            <h3 class="project-title" data-i18n="project3.title">3D Motion Reel</h3>
+            <p class="project-desc" data-i18n="project3.desc">Dynamic motion graphics showreel featuring 3D text animation and particle effects.</p>
+          </div>
+        </article>
+
+        <!-- Project 4 - UI -->
+        <article class="project-card" data-category="ui" id="project-4">
+          <div class="project-image">
+            <img src="images/project-ui.png" alt="Fintech app UI design" loading="lazy" width="600" height="375">
+            <div class="project-overlay">
+              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-category" data-i18n="project4.cat">UI Design</span>
+            <h3 class="project-title" data-i18n="project4.title">Fintech App UI</h3>
+            <p class="project-desc" data-i18n="project4.desc">Clean and intuitive mobile banking app interface with a modern purple gradient design system.</p>
+          </div>
+        </article>
+
+        <!-- Project 5 - Video -->
+        <article class="project-card" data-category="video" id="project-5">
+          <div class="project-image">
+            <img src="images/project-video.png" alt="Cinema promo video edit" loading="lazy" width="600" height="375">
+            <div class="project-overlay">
+              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-category" data-i18n="project5.cat">Video</span>
+            <h3 class="project-title" data-i18n="project5.title">Cinema Promo Edit</h3>
+            <p class="project-desc" data-i18n="project5.desc">Professional color-graded promo video with cinematic transitions and visual effects.</p>
+          </div>
+        </article>
+
+        <!-- Project 6 - Print -->
+        <article class="project-card" data-category="print" id="project-6">
+          <div class="project-image">
+            <img src="images/project-print.png" alt="Fashion magazine editorial layout" loading="lazy" width="600" height="375">
+            <div class="project-overlay">
+              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-category" data-i18n="project6.cat">Print</span>
+            <h3 class="project-title" data-i18n="project6.title">Fashion Editorial</h3>
+            <p class="project-desc" data-i18n="project6.desc">Elegant magazine layout design with modern typography for a fashion editorial spread.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CERTIFICATES SECTION ===================== -->
+  <section class="section certificates" id="certificates">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag" data-i18n="certificates.tag">Certificates</span>
+        <h2 class="section-title" data-i18n="certificates.title">Certifications & Awards</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="certificates-grid stagger-children">
+        <article class="certificate-card" id="cert-1">
+          <div class="certificate-image">
+            <img src="images/certificate.png" alt="Adobe Certified Expert - Photoshop" loading="lazy" width="600" height="413">
+          </div>
+          <div class="certificate-info">
+            <h3 class="certificate-title" data-i18n="cert1.title">Adobe Certified Expert - Photoshop</h3>
+            <span class="certificate-org" data-i18n="cert1.org">Adobe</span>
+          </div>
+        </article>
+
+        <article class="certificate-card" id="cert-2">
+          <div class="certificate-image">
+            <img src="images/certificate.png" alt="Motion Design Masterclass" loading="lazy" width="600" height="413">
+          </div>
+          <div class="certificate-info">
+            <h3 class="certificate-title" data-i18n="cert2.title">Motion Design Masterclass</h3>
+            <span class="certificate-org" data-i18n="cert2.org">Udemy</span>
+          </div>
+        </article>
+
+        <article class="certificate-card" id="cert-3">
+          <div class="certificate-image">
+            <img src="images/certificate.png" alt="Visual Brand Identity" loading="lazy" width="600" height="413">
+          </div>
+          <div class="certificate-info">
+            <h3 class="certificate-title" data-i18n="cert3.title">Visual Brand Identity</h3>
+            <span class="certificate-org" data-i18n="cert3.org">Coursera</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SERVICES SECTION ===================== -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag" data-i18n="services.tag">Services</span>
+        <h2 class="section-title" data-i18n="services.title">What I Offer</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="services-grid stagger-children">
+        <!-- Branding -->
+        <div class="service-card" id="service-branding">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <h3 class="service-title" data-i18n="service1.title">Branding</h3>
+          <p class="service-desc" data-i18n="service1.desc">Complete brand identity design including logos, color palettes, typography, and brand guidelines.</p>
+        </div>
+
+        <!-- Social Media -->
+        <div class="service-card" id="service-social">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </div>
+          <h3 class="service-title" data-i18n="service2.title">Social Media Design</h3>
+          <p class="service-desc" data-i18n="service2.desc">Eye-catching social media posts, stories, and campaign visuals that engage your audience.</p>
+        </div>
+
+        <!-- Motion Graphics -->
+        <div class="service-card" id="service-motion">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <h3 class="service-title" data-i18n="service3.title">Motion Graphics</h3>
+          <p class="service-desc" data-i18n="service3.desc">Professional motion graphics, animated logos, and dynamic visual content for digital platforms.</p>
+        </div>
+
+        <!-- Video Editing -->
+        <div class="service-card" id="service-video">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="23 7 16 12 23 17 23 7"/>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            </svg>
+          </div>
+          <h3 class="service-title" data-i18n="service4.title">Video Editing</h3>
+          <p class="service-desc" data-i18n="service4.desc">High-quality video editing with color grading, transitions, and professional post-production.</p>
+        </div>
+
+        <!-- UI Design -->
+        <div class="service-card" id="service-ui">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <h3 class="service-title" data-i18n="service5.title">UI Design</h3>
+          <p class="service-desc" data-i18n="service5.desc">Modern and intuitive user interface designs for mobile apps and web applications.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT SECTION ===================== -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag" data-i18n="contact.tag">Contact</span>
+        <h2 class="section-title" data-i18n="contact.title">Let's Work Together</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="contact-centered">
+        <!-- Contact Info -->
+        <div class="contact-info reveal">
+          <h3 data-i18n="contact.heading">Get In Touch</h3>
+          <p data-i18n="contact.desc">Have a project in mind? Let's discuss how we can bring your vision to life with creative design solutions.</p>
+
+          <div class="contact-details">
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <div class="contact-item-text">
+                <div class="contact-item-label" data-i18n="contact.email.label">Email</div>
+                <div data-i18n="contact.email">hello@abdalrahman.com</div>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                </svg>
+              </div>
+              <div class="contact-item-text">
+                <div class="contact-item-label" data-i18n="contact.phone.label">Phone</div>
+                <div data-i18n="contact.phone">+20 123 456 7890</div>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div class="contact-item-text">
+                <div class="contact-item-label" data-i18n="contact.location.label">Location</div>
+                <div data-i18n="contact.location">Cairo, Egypt</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Links -->
+          <div class="social-links">
+            <a href="https://linkedin.com/in/abdalrahman" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
+            <a href="https://behance.net/abdalrahman" class="social-link" aria-label="Behance" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24"><path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h4.965c-.105-1.547-1.136-2.219-2.477-2.219-1.466 0-2.277.768-2.488 2.219zm-9.574 6.988H0V5.021h6.953c5.476.081 5.58 5.444 2.72 6.906 3.461 1.26 3.577 8.061-3.207 8.061zM3 11h3.584c2.508 0 2.906-3-.312-3H3v3zm3.391 3H3v3.016h3.341c3.055 0 2.868-3.016.05-3.016z"/></svg>
+            </a>
+            <a href="https://dribbble.com/abdalrahman" class="social-link" aria-label="Dribbble" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24"><path d="M12 24C5.385 24 0 18.615 0 12S5.385 0 12 0s12 5.385 12 12-5.385 12-12 12zm10.12-10.358c-.35-.11-3.17-.953-6.384-.438 1.34 3.684 1.887 6.684 1.992 7.308a10.176 10.176 0 004.395-6.872zm-6.115 7.808c-.153-.9-.75-4.032-2.19-7.77l-.066.02c-5.79 2.015-7.86 6.025-8.04 6.4a10.161 10.161 0 006.29 2.166c1.42 0 2.77-.29 4-.816zm-11.62-2.58c.232-.4 3.045-5.055 8.332-6.765.135-.045.27-.084.405-.12-.26-.585-.54-1.167-.832-1.74C7.17 11.775 2.206 11.71 1.756 11.7l-.004.312c0 2.633.998 5.037 2.634 6.855zm-2.42-8.955c.46.008 4.683.026 9.477-1.248-1.698-3.018-3.53-5.558-3.8-5.928-2.868 1.35-5.01 3.99-5.676 7.17zM9.6 2.052c.282.38 2.145 2.914 3.822 6 3.645-1.365 5.19-3.44 5.373-3.702A10.148 10.148 0 0012 1.822c-.824 0-1.63.076-2.4.228zm10.335 3.483c-.218.29-1.91 2.493-5.724 4.04.24.49.47.985.68 1.486.08.18.15.36.22.53 3.41-.43 6.8.26 7.14.33-.02-2.42-.88-4.64-2.31-6.38z"/></svg>
+            </a>
+            <a href="https://instagram.com/abdalrahman" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer" id="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand -->
+        <div class="footer-brand">
+          <a href="#" class="logo"><span>Abdal</span>rahman</a>
+          <p data-i18n="footer.desc">Creative graphic designer specializing in branding, social media design, motion graphics, and visual communication.</p>
+          <div class="social-links">
+            <a href="https://linkedin.com/in/abdalrahman" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
+            <a href="https://behance.net/abdalrahman" class="social-link" aria-label="Behance" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24"><path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h4.965c-.105-1.547-1.136-2.219-2.477-2.219-1.466 0-2.277.768-2.488 2.219zm-9.574 6.988H0V5.021h6.953c5.476.081 5.58 5.444 2.72 6.906 3.461 1.26 3.577 8.061-3.207 8.061zM3 11h3.584c2.508 0 2.906-3-.312-3H3v3zm3.391 3H3v3.016h3.341c3.055 0 2.868-3.016.05-3.016z"/></svg>
+            </a>
+            <a href="https://instagram.com/abdalrahman" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-nav">
+          <h4 class="footer-heading" data-i18n="footer.links">Quick Links</h4>
+          <div class="footer-links">
+            <a href="#home" data-i18n="nav.home">Home</a>
+            <a href="#about" data-i18n="nav.about">About</a>
+            <a href="#portfolio" data-i18n="nav.portfolio">Portfolio</a>
+            <a href="#services" data-i18n="nav.services">Services</a>
+            <a href="#contact" data-i18n="nav.contact">Contact</a>
+          </div>
+        </div>
+
+        <!-- Connect -->
+        <div class="footer-connect">
+          <h4 class="footer-heading" data-i18n="footer.connect">Connect</h4>
+          <div class="footer-links">
+            <a href="https://linkedin.com/in/abdalrahman" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://behance.net/abdalrahman" target="_blank" rel="noopener noreferrer">Behance</a>
+            <a href="https://dribbble.com/abdalrahman" target="_blank" rel="noopener noreferrer">Dribbble</a>
+            <a href="https://instagram.com/abdalrahman" target="_blank" rel="noopener noreferrer">Instagram</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom">
+        <p class="footer-copyright" data-i18n="footer.copyright">© 2026 Abdalrahman. All rights reserved.</p>
+        <div class="social-links">
+          <a href="https://linkedin.com/in/abdalrahman" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="https://behance.net/abdalrahman" class="social-link" aria-label="Behance" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h4.965c-.105-1.547-1.136-2.219-2.477-2.219-1.466 0-2.277.768-2.488 2.219zm-9.574 6.988H0V5.021h6.953c5.476.081 5.58 5.444 2.72 6.906 3.461 1.26 3.577 8.061-3.207 8.061zM3 11h3.584c2.508 0 2.906-3-.312-3H3v3zm3.391 3H3v3.016h3.341c3.055 0 2.868-3.016.05-3.016z"/></svg>
+          </a>
+          <a href="https://instagram.com/abdalrahman" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 15l-6-6-6 6"/>
+    </svg>
+  </button>
+
+  <!-- Scripts -->
+  <script src="js/language.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
