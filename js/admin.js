@@ -1,53 +1,90 @@
 /* ============================================
-   ADMIN PANEL LOGIC
+   ADMIN PANEL LOGIC — Firebase Auth + Firestore
    ============================================ */
 
-// ---- AUTH ----
-const ADMIN_USER = 'admin';
-const ADMIN_PASS = '123456';
-const SESSION_KEY = 'admin_session';
-
-// ---- DATA KEYS (localStorage) ----
-const STORAGE_KEYS = {
-  projects: 'portfolio_projects',
-  certificates: 'portfolio_certificates',
-  about: 'portfolio_about',
-  contact: 'portfolio_contact'
+// ---- FIRESTORE COLLECTION NAMES ----
+const COLLECTIONS = {
+  projects: 'projects',
+  certificates: 'certificates',
+  about: 'about',
+  contact: 'contact'
 };
+
+// ============================================
+//  XSS SANITIZATION
+//  Escapes HTML special characters to prevent
+//  stored XSS attacks from Firestore data
+// ============================================
+function escapeHTML(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
+// Sanitize a URL — allow only http/https/data/relative paths
+function sanitizeURL(url) {
+  if (!url) return '';
+  const trimmed = url.trim();
+  // Block javascript: and data: URIs except images
+  if (/^javascript:/i.test(trimmed)) return '';
+  if (/^data:(?!image\/)/i.test(trimmed)) return '';
+  return escapeHTML(trimmed);
+}
 
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
-  if (isLoggedIn()) {
-    showDashboard();
-  }
   initLoginForm();
   initSidebar();
   initMobileToggle();
+
+  // Listen for Firebase Auth state changes
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      showDashboard();
+    } else {
+      showLoginScreen();
+    }
+  });
 });
 
 // ============================================
-//  AUTHENTICATION
+//  AUTHENTICATION (Firebase Auth)
 // ============================================
-function isLoggedIn() {
-  return localStorage.getItem(SESSION_KEY) === 'true';
-}
-
 function initLoginForm() {
   const form = document.getElementById('login-form');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const user = document.getElementById('login-user').value.trim();
+    const email = document.getElementById('login-email').value.trim();
     const pass = document.getElementById('login-pass').value.trim();
     const errorEl = document.getElementById('login-error');
+    const loginBtn = document.getElementById('login-btn');
 
-    if (user === ADMIN_USER && pass === ADMIN_PASS) {
-      localStorage.setItem(SESSION_KEY, 'true');
-      showDashboard();
-      errorEl.classList.remove('show');
-    } else {
+    // Disable button during auth
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Signing in...';
+    errorEl.classList.remove('show');
+
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, pass);
+      // onAuthStateChanged will handle showing the dashboard
+    } catch (error) {
+      console.error('Login error:', error);
+      // User-friendly error messages
+      let msg = 'Invalid email or password';
+      if (error.code === 'auth/user-not-found') msg = 'No account found with this email';
+      else if (error.code === 'auth/wrong-password') msg = 'Incorrect password';
+      else if (error.code === 'auth/invalid-email') msg = 'Invalid email format';
+      else if (error.code === 'auth/too-many-requests') msg = 'Too many attempts. Try again later';
+      else if (error.code === 'auth/invalid-credential') msg = 'Invalid email or password';
+
+      errorEl.textContent = msg;
       errorEl.classList.add('show');
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Sign In';
     }
   });
 }
@@ -56,12 +93,20 @@ function showDashboard() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('admin-wrapper').classList.add('active');
   loadAllData();
-  renderDashboard();
 }
 
-function logout() {
-  localStorage.removeItem(SESSION_KEY);
-  location.reload();
+function showLoginScreen() {
+  document.getElementById('login-screen').style.display = '';
+  document.getElementById('admin-wrapper').classList.remove('active');
+}
+
+async function logout() {
+  try {
+    await firebase.auth().signOut();
+    // onAuthStateChanged will handle showing the login screen
+  } catch (error) {
+    console.error('Logout error:', error);
+  }
 }
 
 // ============================================
@@ -80,21 +125,16 @@ function initSidebar() {
 }
 
 function switchPanel(panelName) {
-  // Hide all panels
   document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
-  // Show target panel
   const target = document.getElementById(`panel-${panelName}`);
   if (target) target.classList.add('active');
 
-  // Update nav active state
   document.querySelectorAll('#sidebar-nav a').forEach(a => {
     a.classList.toggle('active', a.getAttribute('data-panel') === panelName);
   });
 
-  // Close mobile sidebar
   document.getElementById('admin-sidebar').classList.remove('open');
 
-  // Refresh panel data
   if (panelName === 'dashboard') renderDashboard();
   if (panelName === 'projects') renderProjectList();
   if (panelName === 'certificates') renderCertList();
@@ -114,7 +154,7 @@ function initMobileToggle() {
 }
 
 // ============================================
-//  DATA MANAGEMENT
+//  DATA MANAGEMENT (Firestore)
 // ============================================
 let projectsData = [];
 let certificatesData = [];
@@ -122,43 +162,23 @@ let aboutData = {};
 let contactData = {};
 
 async function loadAllData() {
-  // Load from localStorage first, fallback to JSON files
-  projectsData = loadFromStorage(STORAGE_KEYS.projects) || await fetchJSON('data/projects.json');
-  certificatesData = loadFromStorage(STORAGE_KEYS.certificates) || await fetchJSON('data/certificates.json');
-  aboutData = loadFromStorage(STORAGE_KEYS.about) || await fetchJSON('data/about.json');
-  contactData = loadFromStorage(STORAGE_KEYS.contact) || await fetchJSON('data/contact.json');
-
-  // Save to localStorage so we always have a copy
-  saveToStorage(STORAGE_KEYS.projects, projectsData);
-  saveToStorage(STORAGE_KEYS.certificates, certificatesData);
-  saveToStorage(STORAGE_KEYS.about, aboutData);
-  saveToStorage(STORAGE_KEYS.contact, contactData);
-}
-
-async function fetchJSON(url) {
   try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
+    const projSnap = await db.collection(COLLECTIONS.projects).orderBy('createdAt', 'desc').get();
+    projectsData = projSnap.docs.map(doc => ({ _docId: doc.id, ...doc.data() }));
 
-function loadFromStorage(key) {
-  try {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : null;
-  } catch {
-    return null;
-  }
-}
+    const certSnap = await db.collection(COLLECTIONS.certificates).orderBy('createdAt', 'desc').get();
+    certificatesData = certSnap.docs.map(doc => ({ _docId: doc.id, ...doc.data() }));
 
-function saveToStorage(key, data) {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch (e) {
-    console.warn('Storage error:', e);
+    const aboutSnap = await db.collection(COLLECTIONS.about).doc('info').get();
+    aboutData = aboutSnap.exists ? aboutSnap.data() : {};
+
+    const contactSnap = await db.collection(COLLECTIONS.contact).doc('info').get();
+    contactData = contactSnap.exists ? contactSnap.data() : {};
+
+    renderDashboard();
+  } catch (error) {
+    console.error('Error loading data from Firestore:', error);
+    showToast('Failed to load data. Check console.', 'error');
   }
 }
 
@@ -169,13 +189,11 @@ function renderDashboard() {
   document.getElementById('stat-projects').textContent = projectsData ? projectsData.length : 0;
   document.getElementById('stat-certs').textContent = certificatesData ? certificatesData.length : 0;
 
-  // Count unique images
   let imgCount = 0;
   if (projectsData) imgCount += projectsData.length;
   if (certificatesData) imgCount += certificatesData.length;
   document.getElementById('stat-images').textContent = imgCount;
 
-  // Recent projects
   const container = document.getElementById('recent-projects');
   if (!container) return;
 
@@ -184,16 +202,18 @@ function renderDashboard() {
     return;
   }
 
-  const recent = projectsData.slice(-3).reverse();
+  const recent = projectsData.slice(0, 3);
   container.innerHTML = recent.map(p => createItemRowHTML(p, 'project')).join('');
 }
 
 function createItemRowHTML(item, type) {
-  const title = item.title ? (item.title.en || '') : '';
-  const subtitle = type === 'project'
-    ? (item.categoryLabel ? item.categoryLabel.en : item.category)
-    : (item.org ? item.org.en : '');
-  const img = item.image || 'images/certificate.png';
+  const title = escapeHTML(item.title ? (item.title.en || '') : '');
+  const subtitle = escapeHTML(
+    type === 'project'
+      ? (item.categoryLabel ? item.categoryLabel.en : item.category)
+      : (item.org ? item.org.en : '')
+  );
+  const img = sanitizeURL(item.image || 'images/certificate.png');
 
   return `
     <div class="item-row">
@@ -207,7 +227,7 @@ function createItemRowHTML(item, type) {
 }
 
 // ============================================
-//  PROJECTS CRUD
+//  PROJECTS CRUD (Firestore)
 // ============================================
 function renderProjectList() {
   const container = document.getElementById('project-list');
@@ -217,9 +237,9 @@ function renderProjectList() {
   }
 
   container.innerHTML = projectsData.map((p, idx) => {
-    const title = p.title ? p.title.en : '';
-    const cat = p.categoryLabel ? p.categoryLabel.en : p.category;
-    const img = p.image || '';
+    const title = escapeHTML(p.title ? p.title.en : '');
+    const cat = escapeHTML(p.categoryLabel ? p.categoryLabel.en : p.category);
+    const img = sanitizeURL(p.image || '');
     return `
       <div class="item-row">
         <div class="item-thumb"><img src="${img}" alt="${title}"></div>
@@ -243,7 +263,6 @@ function showProjectForm(editIdx) {
   document.getElementById('project-list').style.display = 'none';
   document.getElementById('btn-add-project').style.display = 'none';
 
-  // Reset form
   if (editIdx === undefined) {
     document.getElementById('project-form-title').textContent = 'Add New Project';
     document.getElementById('project-edit-id').value = '';
@@ -256,6 +275,8 @@ function showProjectForm(editIdx) {
     document.getElementById('proj-cat-label-ar').value = '';
     document.getElementById('proj-preview').style.display = 'none';
     currentProjectImage = '';
+    const fi = document.getElementById('proj-image-input');
+    if (fi) fi.value = '';
   }
 }
 
@@ -288,15 +309,24 @@ function editProject(idx) {
   }
 }
 
-function deleteProject(idx) {
+async function deleteProject(idx) {
   if (!confirm('Are you sure you want to delete this project?')) return;
-  projectsData.splice(idx, 1);
-  saveToStorage(STORAGE_KEYS.projects, projectsData);
-  renderProjectList();
-  showToast('Project deleted', 'success');
+
+  const project = projectsData[idx];
+  if (!project || !project._docId) return;
+
+  try {
+    await db.collection(COLLECTIONS.projects).doc(project._docId).delete();
+    projectsData.splice(idx, 1);
+    renderProjectList();
+    showToast('Project deleted', 'success');
+  } catch (error) {
+    console.error('Delete project error:', error);
+    showToast('Failed to delete project', 'error');
+  }
 }
 
-function saveProject() {
+async function saveProject() {
   const titleEn = document.getElementById('proj-title-en').value.trim();
   const titleAr = document.getElementById('proj-title-ar').value.trim();
   const descEn = document.getElementById('proj-desc-en').value.trim();
@@ -311,36 +341,61 @@ function saveProject() {
     return;
   }
 
-  const imageToUse = currentProjectImage || 'images/project-branding.png';
+  // ---- Cloudinary image upload (PRESERVED) ----
+  const saveBtn = document.querySelector('#project-form .btn-primary');
+  const fileInput = document.getElementById('proj-image-input');
+  let imageToUse = currentProjectImage || 'images/project-branding.png';
 
-  const project = {
-    id: 'project-' + Date.now(),
+  if (fileInput && fileInput.files && fileInput.files[0]) {
+    setButtonLoading(saveBtn, true);
+    try {
+      const uploadedUrl = await uploadImageToCloudinary(fileInput.files[0]);
+      imageToUse = uploadedUrl;
+    } catch (err) {
+      setButtonLoading(saveBtn, false);
+      showToast('Image upload failed: ' + err.message, 'error');
+      return;
+    }
+    setButtonLoading(saveBtn, false);
+  }
+  // ---- End Cloudinary ----
+
+  const projectData = {
     title: { en: titleEn, ar: titleAr || titleEn },
     desc: { en: descEn, ar: descAr || descEn },
     category: category,
     categoryLabel: { en: catLabelEn || category, ar: catLabelAr || catLabelEn || category },
-    image: imageToUse
+    image: imageToUse,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 
-  if (editId !== '') {
-    // Update existing  
-    const idx = parseInt(editId);
-    project.id = projectsData[idx].id || project.id;
-    projectsData[idx] = project;
-    showToast('Project updated!', 'success');
-  } else {
-    // Add new
-    projectsData.push(project);
-    showToast('Project added!', 'success');
-  }
+  try {
+    setButtonLoading(saveBtn, true, 'Saving...');
 
-  saveToStorage(STORAGE_KEYS.projects, projectsData);
-  hideProjectForm();
-  renderProjectList();
+    if (editId !== '') {
+      const idx = parseInt(editId);
+      const docId = projectsData[idx]._docId;
+      await db.collection(COLLECTIONS.projects).doc(docId).update(projectData);
+      showToast('Project updated!', 'success');
+    } else {
+      projectData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection(COLLECTIONS.projects).add(projectData);
+      showToast('Project added!', 'success');
+    }
+
+    setButtonLoading(saveBtn, false);
+    hideProjectForm();
+    await loadAllData();
+    renderProjectList();
+  } catch (error) {
+    setButtonLoading(saveBtn, false);
+    console.error('Save project error:', error);
+    showToast('Failed to save project', 'error');
+  }
 }
 
 // ============================================
-//  CERTIFICATES CRUD
+//  CERTIFICATES CRUD (Firestore)
 // ============================================
 function renderCertList() {
   const container = document.getElementById('cert-list');
@@ -350,9 +405,9 @@ function renderCertList() {
   }
 
   container.innerHTML = certificatesData.map((c, idx) => {
-    const title = c.title ? c.title.en : '';
-    const org = c.org ? c.org.en : '';
-    const img = c.image || 'images/certificate.png';
+    const title = escapeHTML(c.title ? c.title.en : '');
+    const org = escapeHTML(c.org ? c.org.en : '');
+    const img = sanitizeURL(c.image || 'images/certificate.png');
     return `
       <div class="item-row">
         <div class="item-thumb"><img src="${img}" alt="${title}"></div>
@@ -384,6 +439,8 @@ function showCertForm(editIdx) {
     document.getElementById('cert-org-ar').value = '';
     document.getElementById('cert-preview').style.display = 'none';
     currentCertImage = '';
+    const fi = document.getElementById('cert-image-input');
+    if (fi) fi.value = '';
   }
 }
 
@@ -412,15 +469,24 @@ function editCertificate(idx) {
   }
 }
 
-function deleteCertificate(idx) {
+async function deleteCertificate(idx) {
   if (!confirm('Are you sure you want to delete this certificate?')) return;
-  certificatesData.splice(idx, 1);
-  saveToStorage(STORAGE_KEYS.certificates, certificatesData);
-  renderCertList();
-  showToast('Certificate deleted', 'success');
+
+  const cert = certificatesData[idx];
+  if (!cert || !cert._docId) return;
+
+  try {
+    await db.collection(COLLECTIONS.certificates).doc(cert._docId).delete();
+    certificatesData.splice(idx, 1);
+    renderCertList();
+    showToast('Certificate deleted', 'success');
+  } catch (error) {
+    console.error('Delete certificate error:', error);
+    showToast('Failed to delete certificate', 'error');
+  }
 }
 
-function saveCertificate() {
+async function saveCertificate() {
   const titleEn = document.getElementById('cert-title-en').value.trim();
   const titleAr = document.getElementById('cert-title-ar').value.trim();
   const orgEn = document.getElementById('cert-org-en').value.trim();
@@ -432,32 +498,59 @@ function saveCertificate() {
     return;
   }
 
-  const imageToUse = currentCertImage || 'images/certificate.png';
+  // ---- Cloudinary image upload (PRESERVED) ----
+  const saveBtn = document.querySelector('#cert-form .btn-primary');
+  const fileInput = document.getElementById('cert-image-input');
+  let imageToUse = currentCertImage || 'images/certificate.png';
 
-  const cert = {
-    id: 'cert-' + Date.now(),
+  if (fileInput && fileInput.files && fileInput.files[0]) {
+    setButtonLoading(saveBtn, true);
+    try {
+      const uploadedUrl = await uploadImageToCloudinary(fileInput.files[0]);
+      imageToUse = uploadedUrl;
+    } catch (err) {
+      setButtonLoading(saveBtn, false);
+      showToast('Image upload failed: ' + err.message, 'error');
+      return;
+    }
+    setButtonLoading(saveBtn, false);
+  }
+  // ---- End Cloudinary ----
+
+  const certData = {
     title: { en: titleEn, ar: titleAr || titleEn },
     org: { en: orgEn, ar: orgAr || orgEn },
-    image: imageToUse
+    image: imageToUse,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 
-  if (editId !== '') {
-    const idx = parseInt(editId);
-    cert.id = certificatesData[idx].id || cert.id;
-    certificatesData[idx] = cert;
-    showToast('Certificate updated!', 'success');
-  } else {
-    certificatesData.push(cert);
-    showToast('Certificate added!', 'success');
-  }
+  try {
+    setButtonLoading(saveBtn, true, 'Saving...');
 
-  saveToStorage(STORAGE_KEYS.certificates, certificatesData);
-  hideCertForm();
-  renderCertList();
+    if (editId !== '') {
+      const idx = parseInt(editId);
+      const docId = certificatesData[idx]._docId;
+      await db.collection(COLLECTIONS.certificates).doc(docId).update(certData);
+      showToast('Certificate updated!', 'success');
+    } else {
+      certData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection(COLLECTIONS.certificates).add(certData);
+      showToast('Certificate added!', 'success');
+    }
+
+    setButtonLoading(saveBtn, false);
+    hideCertForm();
+    await loadAllData();
+    renderCertList();
+  } catch (error) {
+    setButtonLoading(saveBtn, false);
+    console.error('Save certificate error:', error);
+    showToast('Failed to save certificate', 'error');
+  }
 }
 
 // ============================================
-//  ABOUT FORM
+//  ABOUT FORM (Firestore)
 // ============================================
 function loadAboutForm() {
   if (!aboutData) return;
@@ -473,9 +566,8 @@ function loadAboutForm() {
   document.getElementById('about-p2-ar').value = aboutData.p2 ? aboutData.p2.ar : '';
 }
 
-function saveAbout() {
+async function saveAbout() {
   aboutData = {
-    ...aboutData,
     name: {
       en: document.getElementById('about-name-en').value.trim(),
       ar: document.getElementById('about-name-ar').value.trim()
@@ -495,15 +587,21 @@ function saveAbout() {
     p2: {
       en: document.getElementById('about-p2-en').value.trim(),
       ar: document.getElementById('about-p2-ar').value.trim()
-    }
+    },
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 
-  saveToStorage(STORAGE_KEYS.about, aboutData);
-  showToast('About info saved!', 'success');
+  try {
+    await db.collection(COLLECTIONS.about).doc('info').set(aboutData);
+    showToast('About info saved!', 'success');
+  } catch (error) {
+    console.error('Save about error:', error);
+    showToast('Failed to save about info', 'error');
+  }
 }
 
 // ============================================
-//  CONTACT FORM
+//  CONTACT FORM (Firestore)
 // ============================================
 function loadContactForm() {
   if (!contactData) return;
@@ -517,7 +615,7 @@ function loadContactForm() {
   document.getElementById('contact-instagram').value = contactData.social ? contactData.social.instagram : '';
 }
 
-function saveContact() {
+async function saveContact() {
   contactData = {
     email: document.getElementById('contact-email').value.trim(),
     phone: document.getElementById('contact-phone').value.trim(),
@@ -530,64 +628,125 @@ function saveContact() {
       behance: document.getElementById('contact-behance').value.trim(),
       dribbble: document.getElementById('contact-dribbble').value.trim(),
       instagram: document.getElementById('contact-instagram').value.trim()
-    }
+    },
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 
-  saveToStorage(STORAGE_KEYS.contact, contactData);
-  showToast('Contact info saved!', 'success');
+  try {
+    await db.collection(COLLECTIONS.contact).doc('info').set(contactData);
+    showToast('Contact info saved!', 'success');
+  } catch (error) {
+    console.error('Save contact error:', error);
+    showToast('Failed to save contact info', 'error');
+  }
 }
 
 // ============================================
-//  IMAGE UPLOAD (Base64 for static hosting)
+//  CLOUDINARY IMAGE UPLOAD (PRESERVED)
 // ============================================
+
+// ---- Cloudinary Configuration ----
+const CLOUDINARY_CLOUD_NAME = 'degbom2gj';
+const CLOUDINARY_UPLOAD_PRESET = 'portofolio-images';
+const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+/**
+ * Upload an image file to Cloudinary via unsigned upload.
+ * @param {File} file - The image file to upload.
+ * @returns {Promise<string>} The secure URL of the uploaded image.
+ */
+async function uploadImageToCloudinary(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+  try {
+    const response = await fetch(CLOUDINARY_UPLOAD_URL, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error?.message || `Upload failed (HTTP ${response.status})`);
+    }
+
+    const data = await response.json();
+
+    if (!data.secure_url) {
+      throw new Error('No URL returned from Cloudinary');
+    }
+
+    return data.secure_url;
+  } catch (error) {
+    console.error('Cloudinary upload error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Toggle a button between loading and normal state.
+ * @param {HTMLElement} btn - The button element.
+ * @param {boolean} isLoading - Whether to show loading state.
+ * @param {string} [loadingText] - Custom loading text.
+ */
+function setButtonLoading(btn, isLoading, loadingText) {
+  if (!btn) return;
+  if (isLoading) {
+    btn._originalText = btn._originalText || btn.textContent;
+    btn.textContent = loadingText || 'Uploading image... Please wait';
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    btn.style.cursor = 'not-allowed';
+  } else {
+    btn.textContent = btn._originalText || 'Save';
+    btn.disabled = false;
+    btn.style.opacity = '';
+    btn.style.cursor = '';
+    btn._originalText = null;
+  }
+}
+
+// ---- File input listeners (preview only, upload happens on save) ----
 document.addEventListener('DOMContentLoaded', () => {
-  // Project image upload
   const projInput = document.getElementById('proj-image-input');
   if (projInput) {
     projInput.addEventListener('change', (e) => {
-      handleImageUpload(e.target.files[0], 'proj-preview', (dataUrl) => {
-        currentProjectImage = dataUrl;
-      });
+      previewSelectedImage(e.target.files[0], 'proj-preview');
     });
   }
 
-  // Certificate image upload
   const certInput = document.getElementById('cert-image-input');
   if (certInput) {
     certInput.addEventListener('change', (e) => {
-      handleImageUpload(e.target.files[0], 'cert-preview', (dataUrl) => {
-        currentCertImage = dataUrl;
-      });
+      previewSelectedImage(e.target.files[0], 'cert-preview');
     });
   }
 });
 
-function handleImageUpload(file, previewId, callback) {
+/**
+ * Show a local preview of the selected image.
+ * @param {File} file - The selected file.
+ * @param {string} previewId - The ID of the <img> preview element.
+ */
+function previewSelectedImage(file, previewId) {
   if (!file) return;
 
-  // Validate file type
   if (!file.type.startsWith('image/')) {
     showToast('Please select an image file', 'error');
     return;
   }
 
-  // Validate file size (max 2MB for localStorage)
-  if (file.size > 2 * 1024 * 1024) {
-    showToast('Image must be under 2MB', 'error');
+  if (file.size > 10 * 1024 * 1024) {
+    showToast('Image must be under 10MB', 'error');
     return;
   }
 
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const dataUrl = e.target.result;
-    const preview = document.getElementById(previewId);
-    if (preview) {
-      preview.src = dataUrl;
-      preview.style.display = 'block';
-    }
-    if (callback) callback(dataUrl);
-  };
-  reader.readAsDataURL(file);
+  const preview = document.getElementById(previewId);
+  if (preview) {
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = 'block';
+  }
 }
 
 // ============================================
@@ -619,8 +778,8 @@ function showToast(message, type = 'success') {
 // ============================================
 function exportData() {
   const data = {
-    projects: projectsData,
-    certificates: certificatesData,
+    projects: projectsData.map(({ _docId, ...rest }) => rest),
+    certificates: certificatesData.map(({ _docId, ...rest }) => rest),
     about: aboutData,
     contact: contactData
   };

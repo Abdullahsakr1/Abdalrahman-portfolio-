@@ -380,9 +380,27 @@ function initHeroCanvas() {
 }
 
 /* ============================================
+   XSS SANITIZATION
+   ============================================ */
+function escapeHTML(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
+function sanitizeURL(url) {
+  if (!url) return '';
+  const trimmed = url.trim();
+  if (/^javascript:/i.test(trimmed)) return '';
+  if (/^data:(?!image\/)/i.test(trimmed)) return '';
+  return escapeHTML(trimmed);
+}
+
+/* ============================================
    DYNAMIC CONTENT LOADING
    Loads projects and certificates from
-   localStorage (admin) or JSON files (default)
+   Firebase Firestore collections
    ============================================ */
 async function loadDynamicContent() {
   await Promise.all([
@@ -391,46 +409,22 @@ async function loadDynamicContent() {
   ]);
 }
 
-// Storage keys (match admin.js)
-const STORAGE_KEYS = {
-  projects: 'portfolio_projects',
-  certificates: 'portfolio_certificates',
-  about: 'portfolio_about',
-  contact: 'portfolio_contact'
-};
-
 // Get current language
 function getLang() {
   return localStorage.getItem('lang') || 'en';
 }
 
-// Fetch JSON helper
-async function fetchJSON(url) {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
-
-// Load from localStorage
-function loadFromStorage(key) {
-  try {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : null;
-  } catch {
-    return null;
-  }
-}
-
-/* ---- PROJECTS ---- */
+/* ---- PROJECTS (Firestore) ---- */
 let portfolioProjects = [];
 
 async function loadProjects() {
-  // Try localStorage first (admin updates), then JSON file
-  portfolioProjects = loadFromStorage(STORAGE_KEYS.projects) || await fetchJSON('data/projects.json') || [];
+  try {
+    const snapshot = await db.collection('projects').orderBy('createdAt', 'desc').get();
+    portfolioProjects = snapshot.docs.map(doc => doc.data());
+  } catch (error) {
+    console.error('Error loading projects from Firestore:', error);
+    portfolioProjects = [];
+  }
   renderProjects();
 }
 
@@ -447,13 +441,15 @@ function renderProjects() {
   }
 
   grid.innerHTML = portfolioProjects.map((p, idx) => {
-    const title = p.title ? (p.title[lang] || p.title.en || '') : '';
-    const desc = p.desc ? (p.desc[lang] || p.desc.en || '') : '';
-    const cat = p.categoryLabel ? (p.categoryLabel[lang] || p.categoryLabel.en || p.category) : p.category;
-    const img = p.image || 'images/project-branding.png';
+    const title = escapeHTML(p.title ? (p.title[lang] || p.title.en || '') : '');
+    const desc = escapeHTML(p.desc ? (p.desc[lang] || p.desc.en || '') : '');
+    const cat = escapeHTML(p.categoryLabel ? (p.categoryLabel[lang] || p.categoryLabel.en || p.category) : p.category);
+    const img = sanitizeURL(p.image || 'images/project-branding.png');
+    const category = escapeHTML(p.category || '');
+    const id = escapeHTML(p.id || 'project-' + idx);
 
     return `
-      <article class="project-card" data-category="${p.category}" id="${p.id || 'project-' + idx}">
+      <article class="project-card" data-category="${category}" id="${id}">
         <div class="project-image">
           <img src="${img}" alt="${title}" loading="lazy" width="600" height="375">
           <div class="project-overlay">
@@ -470,11 +466,17 @@ function renderProjects() {
   }).join('');
 }
 
-/* ---- CERTIFICATES ---- */
+/* ---- CERTIFICATES (Firestore) ---- */
 let portfolioCertificates = [];
 
 async function loadCertificates() {
-  portfolioCertificates = loadFromStorage(STORAGE_KEYS.certificates) || await fetchJSON('data/certificates.json') || [];
+  try {
+    const snapshot = await db.collection('certificates').orderBy('createdAt', 'desc').get();
+    portfolioCertificates = snapshot.docs.map(doc => doc.data());
+  } catch (error) {
+    console.error('Error loading certificates from Firestore:', error);
+    portfolioCertificates = [];
+  }
   renderCertificates();
 }
 
@@ -490,12 +492,13 @@ function renderCertificates() {
   }
 
   grid.innerHTML = portfolioCertificates.map((c, idx) => {
-    const title = c.title ? (c.title[lang] || c.title.en || '') : '';
-    const org = c.org ? (c.org[lang] || c.org.en || '') : '';
-    const img = c.image || 'images/certificate.png';
+    const title = escapeHTML(c.title ? (c.title[lang] || c.title.en || '') : '');
+    const org = escapeHTML(c.org ? (c.org[lang] || c.org.en || '') : '');
+    const img = sanitizeURL(c.image || 'images/certificate.png');
+    const id = escapeHTML(c.id || 'cert-' + idx);
 
     return `
-      <article class="certificate-card" id="${c.id || 'cert-' + idx}">
+      <article class="certificate-card" id="${id}">
         <div class="certificate-image">
           <img src="${img}" alt="${title}" loading="lazy" width="600" height="413">
         </div>
@@ -574,13 +577,15 @@ function initProjectModal() {
     const title = project.title ? (project.title[lang] || project.title.en) : '';
     const desc = project.desc ? (project.desc[lang] || project.desc.en) : '';
     const cat = project.categoryLabel ? (project.categoryLabel[lang] || project.categoryLabel.en) : project.category;
-    const img = project.image || '';
+    const img = sanitizeURL(project.image || '');
 
+    // Use textContent (safe) for text fields
     document.getElementById('project-modal-title').textContent = title;
     document.getElementById('project-modal-desc').textContent = desc;
     document.getElementById('project-modal-cat').textContent = cat;
+    // Only use innerHTML for the image with a sanitized URL
     document.getElementById('project-modal-image').innerHTML = img
-      ? `<img src="${img}" alt="${title}" style="width:100%;border-radius:12px;">`
+      ? `<img src="${img}" alt="${escapeHTML(title)}" style="width:100%;border-radius:12px;">`
       : '';
 
     overlay.classList.add('active');

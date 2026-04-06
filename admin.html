@@ -711,15 +711,15 @@
 
       <form id="login-form" autocomplete="off">
         <div class="form-group">
-          <label for="login-user">Username</label>
-          <input type="text" id="login-user" placeholder="Enter username" required>
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="Enter admin email" required>
         </div>
         <div class="form-group">
           <label for="login-pass">Password</label>
           <input type="password" id="login-pass" placeholder="Enter password" required>
         </div>
-        <button type="submit" class="btn btn-primary">Sign In</button>
-        <p class="login-error" id="login-error">Invalid username or password</p>
+        <button type="submit" class="btn btn-primary" id="login-btn">Sign In</button>
+        <p class="login-error" id="login-error">Invalid email or password</p>
       </form>
     </div>
   </div>
@@ -1091,6 +1091,24 @@
     </div>
   </div>
 
+  <!-- Firebase SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script>
+    // ---- Firebase Configuration ----
+    // Replace placeholder values with your actual Firebase project config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCItN_HGBMkGg_nhAvoLKT5WVp16pWbVgw",
+      authDomain: "designer-portfolio-d6f89.firebaseapp.com",
+      projectId: "designer-portfolio-d6f89",
+      storageBucket: "designer-portfolio-d6f89.firebasestorage.app",
+      messagingSenderId: "802717199451",
+      appId: "1:802717199451:web:d3dd9dfe9c52d2b6b6237e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
   <script src="js/admin.js"></script>
 </body>
 </html>
