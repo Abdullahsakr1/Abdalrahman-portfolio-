@@ -7,10 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
   initLoading();
   initNavbar();
   initHeroCanvas();
-  initPortfolioFilter();
-  initScrollAnimations();
   initBackToTop();
-  initLanguage(); // from language.js
+
+  // Load dynamic content first, then init filters, animations, and language
+  loadDynamicContent().then(() => {
+    initPortfolioFilter();
+    initScrollAnimations();
+    initProjectModal();
+    initLanguage(); // from language.js
+  });
 });
 
 /* ============================================
@@ -375,6 +380,215 @@ function initHeroCanvas() {
 }
 
 /* ============================================
+   DYNAMIC CONTENT LOADING
+   Loads projects and certificates from
+   localStorage (admin) or JSON files (default)
+   ============================================ */
+async function loadDynamicContent() {
+  await Promise.all([
+    loadProjects(),
+    loadCertificates()
+  ]);
+}
+
+// Storage keys (match admin.js)
+const STORAGE_KEYS = {
+  projects: 'portfolio_projects',
+  certificates: 'portfolio_certificates',
+  about: 'portfolio_about',
+  contact: 'portfolio_contact'
+};
+
+// Get current language
+function getLang() {
+  return localStorage.getItem('lang') || 'en';
+}
+
+// Fetch JSON helper
+async function fetchJSON(url) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error();
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+// Load from localStorage
+function loadFromStorage(key) {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : null;
+  } catch {
+    return null;
+  }
+}
+
+/* ---- PROJECTS ---- */
+let portfolioProjects = [];
+
+async function loadProjects() {
+  // Try localStorage first (admin updates), then JSON file
+  portfolioProjects = loadFromStorage(STORAGE_KEYS.projects) || await fetchJSON('data/projects.json') || [];
+  renderProjects();
+}
+
+function renderProjects() {
+  const grid = document.getElementById('portfolio-grid');
+  if (!grid) return;
+
+  const lang = getLang();
+  const viewText = lang === 'ar' ? 'عرض المشروع' : 'View Project';
+
+  if (portfolioProjects.length === 0) {
+    grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);grid-column:1/-1;padding:40px;">No projects available yet.</p>';
+    return;
+  }
+
+  grid.innerHTML = portfolioProjects.map((p, idx) => {
+    const title = p.title ? (p.title[lang] || p.title.en || '') : '';
+    const desc = p.desc ? (p.desc[lang] || p.desc.en || '') : '';
+    const cat = p.categoryLabel ? (p.categoryLabel[lang] || p.categoryLabel.en || p.category) : p.category;
+    const img = p.image || 'images/project-branding.png';
+
+    return `
+      <article class="project-card" data-category="${p.category}" id="${p.id || 'project-' + idx}">
+        <div class="project-image">
+          <img src="${img}" alt="${title}" loading="lazy" width="600" height="375">
+          <div class="project-overlay">
+            <a href="javascript:void(0)" class="project-overlay-btn" data-project-idx="${idx}">${viewText}</a>
+          </div>
+        </div>
+        <div class="project-info">
+          <span class="project-category">${cat}</span>
+          <h3 class="project-title">${title}</h3>
+          <p class="project-desc">${desc}</p>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+/* ---- CERTIFICATES ---- */
+let portfolioCertificates = [];
+
+async function loadCertificates() {
+  portfolioCertificates = loadFromStorage(STORAGE_KEYS.certificates) || await fetchJSON('data/certificates.json') || [];
+  renderCertificates();
+}
+
+function renderCertificates() {
+  const grid = document.getElementById('certificates-grid');
+  if (!grid) return;
+
+  const lang = getLang();
+
+  if (portfolioCertificates.length === 0) {
+    grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);grid-column:1/-1;padding:40px;">No certificates available yet.</p>';
+    return;
+  }
+
+  grid.innerHTML = portfolioCertificates.map((c, idx) => {
+    const title = c.title ? (c.title[lang] || c.title.en || '') : '';
+    const org = c.org ? (c.org[lang] || c.org.en || '') : '';
+    const img = c.image || 'images/certificate.png';
+
+    return `
+      <article class="certificate-card" id="${c.id || 'cert-' + idx}">
+        <div class="certificate-image">
+          <img src="${img}" alt="${title}" loading="lazy" width="600" height="413">
+        </div>
+        <div class="certificate-info">
+          <h3 class="certificate-title">${title}</h3>
+          <span class="certificate-org">${org}</span>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+/* ============================================
+   RE-RENDER ON LANGUAGE CHANGE
+   Hook into the language system to re-render
+   dynamic content when language switches
+   ============================================ */
+// Override the original applyTranslations to also re-render dynamic content
+const _originalApplyTranslations = window.applyTranslations || function() {};
+window.applyTranslations = function(lang) {
+  // Call the original from language.js
+  if (typeof _originalApplyTranslations === 'function') {
+    _originalApplyTranslations(lang);
+  }
+  // Re-render dynamic content with new language
+  renderProjects();
+  renderCertificates();
+  // Re-init filter after re-render
+  initPortfolioFilter();
+};
+
+/* ============================================
+   PROJECT MODAL POPUP
+   ============================================ */
+function initProjectModal() {
+  const overlay = document.getElementById('project-modal-overlay');
+  const closeBtn = document.getElementById('project-modal-close');
+
+  if (!overlay) return;
+
+  // Close button
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  }
+
+  // Click overlay to close
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Escape key to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Event delegation for "View Project" buttons
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-project-idx]');
+    if (!btn) return;
+    e.preventDefault();
+
+    const idx = parseInt(btn.getAttribute('data-project-idx'));
+    const project = portfolioProjects[idx];
+    if (!project) return;
+
+    const lang = getLang();
+    const title = project.title ? (project.title[lang] || project.title.en) : '';
+    const desc = project.desc ? (project.desc[lang] || project.desc.en) : '';
+    const cat = project.categoryLabel ? (project.categoryLabel[lang] || project.categoryLabel.en) : project.category;
+    const img = project.image || '';
+
+    document.getElementById('project-modal-title').textContent = title;
+    document.getElementById('project-modal-desc').textContent = desc;
+    document.getElementById('project-modal-cat').textContent = cat;
+    document.getElementById('project-modal-image').innerHTML = img
+      ? `<img src="${img}" alt="${title}" style="width:100%;border-radius:12px;">`
+      : '';
+
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+}
+
+/* ============================================
    PORTFOLIO FILTER
    ============================================ */
 function initPortfolioFilter() {
@@ -382,13 +596,17 @@ function initPortfolioFilter() {
   const projectCards = document.querySelectorAll('.project-card');
 
   filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    // Remove old listeners by cloning
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
 
-      const filter = btn.getAttribute('data-filter');
+    newBtn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      newBtn.classList.add('active');
 
-      projectCards.forEach(card => {
+      const filter = newBtn.getAttribute('data-filter');
+
+      document.querySelectorAll('.project-card').forEach(card => {
         const category = card.getAttribute('data-category');
         if (filter === 'all' || category === filter) {
           card.classList.remove('hidden');

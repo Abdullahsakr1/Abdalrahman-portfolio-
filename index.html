@@ -248,97 +248,9 @@
         <button class="filter-btn" data-filter="print" data-i18n="filter.print">Print</button>
       </div>
 
-      <!-- Projects Grid -->
-      <div class="portfolio-grid stagger-children">
-        <!-- Project 1 - Branding -->
-        <article class="project-card" data-category="branding" id="project-1">
-          <div class="project-image">
-            <img src="images/project-branding.png" alt="Luxury brand identity design" loading="lazy" width="600" height="375">
-            <div class="project-overlay">
-              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
-            </div>
-          </div>
-          <div class="project-info">
-            <span class="project-category" data-i18n="project1.cat">Branding</span>
-            <h3 class="project-title" data-i18n="project1.title">Luxury Brand Identity</h3>
-            <p class="project-desc" data-i18n="project1.desc">Complete brand identity design including logo, business cards, and stationery for a luxury fashion brand.</p>
-          </div>
-        </article>
-
-        <!-- Project 2 - Social Media -->
-        <article class="project-card" data-category="social" id="project-2">
-          <div class="project-image">
-            <img src="images/project-social.png" alt="Restaurant social media campaign" loading="lazy" width="600" height="375">
-            <div class="project-overlay">
-              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
-            </div>
-          </div>
-          <div class="project-info">
-            <span class="project-category" data-i18n="project2.cat">Social Media</span>
-            <h3 class="project-title" data-i18n="project2.title">Restaurant Social Campaign</h3>
-            <p class="project-desc" data-i18n="project2.desc">Vibrant social media campaign design with cohesive visual storytelling for a modern restaurant.</p>
-          </div>
-        </article>
-
-        <!-- Project 3 - Motion -->
-        <article class="project-card" data-category="motion" id="project-3">
-          <div class="project-image">
-            <img src="images/project-motion.png" alt="3D motion graphics showreel" loading="lazy" width="600" height="375">
-            <div class="project-overlay">
-              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
-            </div>
-          </div>
-          <div class="project-info">
-            <span class="project-category" data-i18n="project3.cat">Motion</span>
-            <h3 class="project-title" data-i18n="project3.title">3D Motion Reel</h3>
-            <p class="project-desc" data-i18n="project3.desc">Dynamic motion graphics showreel featuring 3D text animation and particle effects.</p>
-          </div>
-        </article>
-
-        <!-- Project 4 - UI -->
-        <article class="project-card" data-category="ui" id="project-4">
-          <div class="project-image">
-            <img src="images/project-ui.png" alt="Fintech app UI design" loading="lazy" width="600" height="375">
-            <div class="project-overlay">
-              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
-            </div>
-          </div>
-          <div class="project-info">
-            <span class="project-category" data-i18n="project4.cat">UI Design</span>
-            <h3 class="project-title" data-i18n="project4.title">Fintech App UI</h3>
-            <p class="project-desc" data-i18n="project4.desc">Clean and intuitive mobile banking app interface with a modern purple gradient design system.</p>
-          </div>
-        </article>
-
-        <!-- Project 5 - Video -->
-        <article class="project-card" data-category="video" id="project-5">
-          <div class="project-image">
-            <img src="images/project-video.png" alt="Cinema promo video edit" loading="lazy" width="600" height="375">
-            <div class="project-overlay">
-              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
-            </div>
-          </div>
-          <div class="project-info">
-            <span class="project-category" data-i18n="project5.cat">Video</span>
-            <h3 class="project-title" data-i18n="project5.title">Cinema Promo Edit</h3>
-            <p class="project-desc" data-i18n="project5.desc">Professional color-graded promo video with cinematic transitions and visual effects.</p>
-          </div>
-        </article>
-
-        <!-- Project 6 - Print -->
-        <article class="project-card" data-category="print" id="project-6">
-          <div class="project-image">
-            <img src="images/project-print.png" alt="Fashion magazine editorial layout" loading="lazy" width="600" height="375">
-            <div class="project-overlay">
-              <a href="#" class="project-overlay-btn" data-i18n="project.view">View Project</a>
-            </div>
-          </div>
-          <div class="project-info">
-            <span class="project-category" data-i18n="project6.cat">Print</span>
-            <h3 class="project-title" data-i18n="project6.title">Fashion Editorial</h3>
-            <p class="project-desc" data-i18n="project6.desc">Elegant magazine layout design with modern typography for a fashion editorial spread.</p>
-          </div>
-        </article>
+      <!-- Projects Grid (loaded dynamically from data/projects.json) -->
+      <div class="portfolio-grid stagger-children" id="portfolio-grid">
+        <!-- Projects are loaded dynamically by main.js -->
       </div>
     </div>
   </section>
@@ -352,36 +264,8 @@
         <div class="section-line"></div>
       </div>
 
-      <div class="certificates-grid stagger-children">
-        <article class="certificate-card" id="cert-1">
-          <div class="certificate-image">
-            <img src="images/certificate.png" alt="Adobe Certified Expert - Photoshop" loading="lazy" width="600" height="413">
-          </div>
-          <div class="certificate-info">
-            <h3 class="certificate-title" data-i18n="cert1.title">Adobe Certified Expert - Photoshop</h3>
-            <span class="certificate-org" data-i18n="cert1.org">Adobe</span>
-          </div>
-        </article>
-
-        <article class="certificate-card" id="cert-2">
-          <div class="certificate-image">
-            <img src="images/certificate.png" alt="Motion Design Masterclass" loading="lazy" width="600" height="413">
-          </div>
-          <div class="certificate-info">
-            <h3 class="certificate-title" data-i18n="cert2.title">Motion Design Masterclass</h3>
-            <span class="certificate-org" data-i18n="cert2.org">Udemy</span>
-          </div>
-        </article>
-
-        <article class="certificate-card" id="cert-3">
-          <div class="certificate-image">
-            <img src="images/certificate.png" alt="Visual Brand Identity" loading="lazy" width="600" height="413">
-          </div>
-          <div class="certificate-info">
-            <h3 class="certificate-title" data-i18n="cert3.title">Visual Brand Identity</h3>
-            <span class="certificate-org" data-i18n="cert3.org">Coursera</span>
-          </div>
-        </article>
+      <div class="certificates-grid stagger-children" id="certificates-grid">
+        <!-- Certificates are loaded dynamically by main.js -->
       </div>
     </div>
   </section>
@@ -605,6 +489,19 @@
       <path d="M18 15l-6-6-6 6"/>
     </svg>
   </button>
+
+  <!-- Project Modal Popup -->
+  <div class="project-modal-overlay" id="project-modal-overlay">
+    <div class="project-modal" id="project-modal">
+      <button class="project-modal-close" id="project-modal-close" aria-label="Close modal">&times;</button>
+      <div class="project-modal-image" id="project-modal-image"></div>
+      <div class="project-modal-body">
+        <span class="project-modal-cat" id="project-modal-cat"></span>
+        <h3 class="project-modal-title" id="project-modal-title"></h3>
+        <p class="project-modal-desc" id="project-modal-desc"></p>
+      </div>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="js/language.js"></script>

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Abdalrahman Portfolio</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       ADMIN PANEL STYLES
+       ============================================ */
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --bg-card: #16161f;
+      --bg-card-hover: #1e1e2d;
+      --accent-primary: #d4a853;
+      --accent-secondary: #e8c975;
+      --accent-gradient: linear-gradient(135deg, #d4a853 0%, #e8c975 50%, #d4a853 100%);
+      --accent-glow: 0 0 30px rgba(212, 168, 83, 0.3);
+      --text-primary: #f0ece4;
+      --text-secondary: #a8a4a0;
+      --text-muted: #6b6765;
+      --border-color: rgba(212, 168, 83, 0.15);
+      --border-hover: rgba(212, 168, 83, 0.4);
+      --danger: #e74c3c;
+      --success: #2ecc71;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: var(--accent-primary); color: var(--bg-primary); }
+
+    /* ---- LOGIN SCREEN ---- */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      animation: fadeInUp 0.6s ease;
+    }
+
+    .login-card .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .login-card .logo span {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .login-card .subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color var(--transition-fast);
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--accent-primary);
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-group select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a8a4a0' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: var(--bg-primary);
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-card-hover);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+    }
+
+    .btn-danger:hover {
+      opacity: 0.85;
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 0.8rem;
+    }
+
+    .login-error {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .login-error.show { display: block; }
+
+    /* ---- DASHBOARD ---- */
+    .admin-wrapper { display: none; }
+    .admin-wrapper.active { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: 260px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      padding: 24px 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+      transition: transform var(--transition-base);
+    }
+
+    .sidebar-header {
+      padding: 0 24px 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+
+    .sidebar-header .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .sidebar-header .logo span {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sidebar-header .admin-label {
+      font-size: 0.75rem;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+
+    .sidebar-nav {
+      padding: 0 12px;
+      flex: 1;
+      list-style: none;
+    }
+
+    .sidebar-nav li {
+      margin-bottom: 4px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .sidebar-nav a:hover {
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+    }
+
+    .sidebar-nav a.active {
+      color: var(--bg-primary);
+      background: var(--accent-gradient);
+      font-weight: 600;
+    }
+
+    .sidebar-nav a svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .sidebar-footer a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .sidebar-footer a:hover { color: var(--danger); }
+
+    /* Main Content */
+    .admin-main {
+      flex: 1;
+      margin-left: 260px;
+      padding: 32px;
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .admin-header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .admin-header .btn-back {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color var(--transition-fast);
+    }
+
+    .admin-header .btn-back:hover { color: var(--accent-primary); }
+
+    /* Panel content */
+    .admin-panel { display: none; }
+    .admin-panel.active { display: block; animation: fadeInUp 0.4s ease; }
+
+    /* Stats cards row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all var(--transition-fast);
+    }
+
+    .stat-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(212, 168, 83, 0.1);
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
+
+    .stat-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--accent-primary);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Data table / cards list */
+    .data-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .data-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .data-card-header h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      border: 1px solid transparent;
+      transition: border-color var(--transition-fast);
+    }
+
+    .item-row:hover { border-color: var(--border-color); }
+
+    .item-thumb {
+      width: 80px;
+      height: 56px;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: var(--bg-card);
+    }
+
+    .item-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .item-info { flex: 1; min-width: 0; }
+
+    .item-info h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-info span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .item-actions button {
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-edit {
+      background: rgba(212, 168, 83, 0.15);
+      color: var(--accent-primary);
+    }
+
+    .btn-edit:hover { background: rgba(212, 168, 83, 0.3); }
+
+    .btn-delete {
+      background: rgba(231, 76, 60, 0.15);
+      color: var(--danger);
+    }
+
+    .btn-delete:hover { background: rgba(231, 76, 60, 0.3); }
+
+    /* Form card */
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 32px;
+      max-width: 700px;
+    }
+
+    .form-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    /* Image upload area */
+    .upload-area {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-area:hover { border-color: var(--accent-primary); }
+
+    .upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-area svg {
+      width: 40px;
+      height: 40px;
+      stroke: var(--text-muted);
+      fill: none;
+      stroke-width: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .upload-area p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .upload-area .accent { color: var(--accent-primary); }
+
+    .upload-preview {
+      width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      padding: 14px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #fff;
+      z-index: 10000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--danger); }
+
+    /* Mobile sidebar toggle */
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 200;
+      width: 44px;
+      height: 44px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .mobile-toggle svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--text-primary);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Project modal preview */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 32px;
+      position: relative;
+      animation: fadeInUp 0.3s ease;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      transition: all var(--transition-fast);
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .admin-sidebar {
+        transform: translateX(-100%);
+      }
+
+      .admin-sidebar.open {
+        transform: translateX(0);
+      }
+
+      .admin-main {
+        margin-left: 0;
+        padding: 24px 16px;
+        padding-top: 72px;
+      }
+
+      .mobile-toggle { display: flex; }
+
+      .form-row { grid-template-columns: 1fr; }
+
+      .stats-row { grid-template-columns: 1fr 1fr; }
+
+      .item-row { flex-wrap: wrap; }
+
+      .item-thumb { width: 60px; height: 42px; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== LOGIN SCREEN ===================== -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <div class="logo"><span>Abdal</span>rahman</div>
+      <p class="subtitle">Admin Dashboard</p>
+
+      <form id="login-form" autocomplete="off">
+        <div class="form-group">
+          <label for="login-user">Username</label>
+          <input type="text" id="login-user" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+          <label for="login-pass">Password</label>
+          <input type="password" id="login-pass" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign In</button>
+        <p class="login-error" id="login-error">Invalid username or password</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <div class="admin-wrapper" id="admin-wrapper">
+
+    <!-- Mobile toggle -->
+    <button class="mobile-toggle" id="mobile-toggle">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-header">
+        <div class="logo"><span>Abdal</span>rahman</div>
+        <div class="admin-label">Admin Panel</div>
+      </div>
+
+      <ul class="sidebar-nav" id="sidebar-nav">
+        <li><a data-panel="dashboard" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a></li>
+        <li><a data-panel="projects">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Projects
+        </a></li>
+        <li><a data-panel="certificates">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          Certificates
+        </a></li>
+        <li><a data-panel="about">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          About
+        </a></li>
+        <li><a data-panel="contact">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Contact
+        </a></li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <a href="index.html" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          View Site
+        </a>
+        <a id="logout-btn" style="margin-top: 12px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main" id="admin-main">
+
+      <!-- ===== DASHBOARD PANEL ===== -->
+      <div class="admin-panel active" id="panel-dashboard">
+        <div class="admin-header">
+          <h1>Dashboard</h1>
+        </div>
+
+        <div class="stats-row" id="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div>
+              <div class="stat-value" id="stat-projects">0</div>
+              <div class="stat-label">Projects</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            </div>
+            <div>
+              <div class="stat-value" id="stat-certs">0</div>
+              <div class="stat-label">Certificates</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <div>
+              <div class="stat-value" id="stat-images">0</div>
+              <div class="stat-label">Images</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="data-card">
+          <div class="data-card-header">
+            <h3>Recent Projects</h3>
+            <button class="btn btn-secondary btn-sm" onclick="switchPanel('projects')">View All</button>
+          </div>
+          <div id="recent-projects"></div>
+        </div>
+      </div>
+
+      <!-- ===== PROJECTS PANEL ===== -->
+      <div class="admin-panel" id="panel-projects">
+        <div class="admin-header">
+          <h1>Projects</h1>
+          <button class="btn btn-primary btn-sm" id="btn-add-project" onclick="showProjectForm()">+ Add Project</button>
+        </div>
+
+        <!-- Project List -->
+        <div id="project-list" class="data-card"></div>
+
+        <!-- Project Form (hidden by default) -->
+        <div class="form-card" id="project-form" style="display:none;">
+          <h3 id="project-form-title">Add New Project</h3>
+          <input type="hidden" id="project-edit-id">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="proj-title-en">Title (English)</label>
+              <input type="text" id="proj-title-en" placeholder="Project title in English">
+            </div>
+            <div class="form-group">
+              <label for="proj-title-ar">Title (Arabic)</label>
+              <input type="text" id="proj-title-ar" placeholder="عنوان المشروع بالعربية" dir="rtl">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="proj-desc-en">Description (English)</label>
+              <textarea id="proj-desc-en" placeholder="Project description in English"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="proj-desc-ar">Description (Arabic)</label>
+              <textarea id="proj-desc-ar" placeholder="وصف المشروع بالعربية" dir="rtl"></textarea>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="proj-category">Category</label>
+              <select id="proj-category">
+                <option value="branding">Branding</option>
+                <option value="social">Social Media</option>
+                <option value="motion">Motion</option>
+                <option value="ui">UI Design</option>
+                <option value="video">Video</option>
+                <option value="print">Print</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="proj-cat-label-en">Category Label (English)</label>
+              <input type="text" id="proj-cat-label-en" placeholder="e.g. Branding">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="proj-cat-label-ar">Category Label (Arabic)</label>
+            <input type="text" id="proj-cat-label-ar" placeholder="مثال: علامات تجارية" dir="rtl">
+          </div>
+
+          <div class="form-group">
+            <label>Project Image</label>
+            <div class="upload-area" id="proj-upload-area">
+              <input type="file" id="proj-image-input" accept="image/*">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <p>Click to upload or drag image here</p>
+              <p class="accent">Recommended: 600×375</p>
+              <img class="upload-preview" id="proj-preview">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveProject()">Save Project</button>
+            <button class="btn btn-secondary" onclick="hideProjectForm()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== CERTIFICATES PANEL ===== -->
+      <div class="admin-panel" id="panel-certificates">
+        <div class="admin-header">
+          <h1>Certificates</h1>
+          <button class="btn btn-primary btn-sm" onclick="showCertForm()">+ Add Certificate</button>
+        </div>
+
+        <div id="cert-list" class="data-card"></div>
+
+        <div class="form-card" id="cert-form" style="display:none;">
+          <h3 id="cert-form-title">Add New Certificate</h3>
+          <input type="hidden" id="cert-edit-id">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cert-title-en">Title (English)</label>
+              <input type="text" id="cert-title-en" placeholder="Certificate name">
+            </div>
+            <div class="form-group">
+              <label for="cert-title-ar">Title (Arabic)</label>
+              <input type="text" id="cert-title-ar" placeholder="اسم الشهادة" dir="rtl">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cert-org-en">Organization (English)</label>
+              <input type="text" id="cert-org-en" placeholder="e.g. Adobe">
+            </div>
+            <div class="form-group">
+              <label for="cert-org-ar">Organization (Arabic)</label>
+              <input type="text" id="cert-org-ar" placeholder="مثال: Adobe" dir="rtl">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Certificate Image</label>
+            <div class="upload-area" id="cert-upload-area">
+              <input type="file" id="cert-image-input" accept="image/*">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <p>Click to upload certificate image</p>
+              <img class="upload-preview" id="cert-preview">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveCertificate()">Save Certificate</button>
+            <button class="btn btn-secondary" onclick="hideCertForm()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ABOUT PANEL ===== -->
+      <div class="admin-panel" id="panel-about">
+        <div class="admin-header">
+          <h1>About Information</h1>
+        </div>
+
+        <div class="form-card">
+          <h3>Edit About Section</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="about-name-en">Name (English)</label>
+              <input type="text" id="about-name-en">
+            </div>
+            <div class="form-group">
+              <label for="about-name-ar">Name (Arabic)</label>
+              <input type="text" id="about-name-ar" dir="rtl">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="about-role-en">Role (English)</label>
+              <input type="text" id="about-role-en">
+            </div>
+            <div class="form-group">
+              <label for="about-role-ar">Role (Arabic)</label>
+              <input type="text" id="about-role-ar" dir="rtl">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="about-badge-en">Badge (English)</label>
+            <input type="text" id="about-badge-en">
+          </div>
+
+          <div class="form-group">
+            <label for="about-badge-ar">Badge (Arabic)</label>
+            <input type="text" id="about-badge-ar" dir="rtl">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="about-p1-en">Paragraph 1 (English)</label>
+              <textarea id="about-p1-en" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="about-p1-ar">Paragraph 1 (Arabic)</label>
+              <textarea id="about-p1-ar" rows="4" dir="rtl"></textarea>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="about-p2-en">Paragraph 2 (English)</label>
+              <textarea id="about-p2-en" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="about-p2-ar">Paragraph 2 (Arabic)</label>
+              <textarea id="about-p2-ar" rows="4" dir="rtl"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveAbout()">Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== CONTACT PANEL ===== -->
+      <div class="admin-panel" id="panel-contact">
+        <div class="admin-header">
+          <h1>Contact Information</h1>
+        </div>
+
+        <div class="form-card">
+          <h3>Edit Contact Details</h3>
+
+          <div class="form-group">
+            <label for="contact-email">Email</label>
+            <input type="email" id="contact-email">
+          </div>
+
+          <div class="form-group">
+            <label for="contact-phone">Phone</label>
+            <input type="text" id="contact-phone">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contact-loc-en">Location (English)</label>
+              <input type="text" id="contact-loc-en">
+            </div>
+            <div class="form-group">
+              <label for="contact-loc-ar">Location (Arabic)</label>
+              <input type="text" id="contact-loc-ar" dir="rtl">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-linkedin">LinkedIn URL</label>
+            <input type="url" id="contact-linkedin">
+          </div>
+
+          <div class="form-group">
+            <label for="contact-behance">Behance URL</label>
+            <input type="url" id="contact-behance">
+          </div>
+
+          <div class="form-group">
+            <label for="contact-dribbble">Dribbble URL</label>
+            <input type="url" id="contact-dribbble">
+          </div>
+
+          <div class="form-group">
+            <label for="contact-instagram">Instagram URL</label>
+            <input type="url" id="contact-instagram">
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveContact()">Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Modal for project preview -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-content" id="modal-content">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "email": "hello@abdalrahman.com",
+  "phone": "+20 123 456 7890",
+  "location": { "en": "Cairo, Egypt", "ar": "القاهرة، مصر" },
+  "social": {
+    "linkedin": "https://linkedin.com/in/abdalrahman",
+    "behance": "https://behance.net/abdalrahman",
+    "dribbble": "https://dribbble.com/abdalrahman",
+    "instagram": "https://instagram.com/abdalrahman"
+  }
+}

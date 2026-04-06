@@ -1,0 +1,8 @@
+{
+  "name": { "en": "Abdalrahman", "ar": "عبدالرحمن" },
+  "role": { "en": "Creative Graphic Designer & Visual Artist", "ar": "مصمم جرافيك إبداعي وفنان بصري" },
+  "badge": { "en": "5+ Years Experience", "ar": "+5 سنوات خبرة" },
+  "p1": { "en": "I'm a passionate graphic designer with over 5 years of experience in creating visually stunning designs. I specialize in branding, social media design, motion graphics, and UI design using Adobe Creative Suite.", "ar": "أنا مصمم جرافيك شغوف بخبرة تزيد عن 5 سنوات في إنشاء تصميمات بصرية مذهلة. أتخصص في تصميم العلامات التجارية وتصميم وسائل التواصل الاجتماعي والموشن جرافيك وتصميم واجهات المستخدم باستخدام Adobe Creative Suite." },
+  "p2": { "en": "My goal is to transform complex ideas into clear, beautiful, and impactful visual solutions that help brands stand out and connect with their audience.", "ar": "هدفي هو تحويل الأفكار المعقدة إلى حلول بصرية واضحة وجميلة ومؤثرة تساعد العلامات التجارية على التميز والتواصل مع جمهورها." },
+  "image": "images/profile.png"
+}

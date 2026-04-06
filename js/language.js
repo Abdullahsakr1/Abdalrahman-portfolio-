@@ -302,7 +302,12 @@ function initLanguage() {
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const lang = btn.getAttribute('data-lang');
-      applyTranslations(lang);
+      // Use window.applyTranslations so it picks up any override from main.js
+      if (typeof window.applyTranslations === 'function') {
+        window.applyTranslations(lang);
+      } else {
+        applyTranslations(lang);
+      }
     });
   });
 
@@ -310,7 +315,8 @@ function initLanguage() {
   applyTranslations(currentLang);
 }
 
-// Export
+// Export to window
 window.initLanguage = initLanguage;
 window.translations = translations;
 window.currentLang = currentLang;
+window.applyTranslations = applyTranslations;
