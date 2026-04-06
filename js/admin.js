@@ -609,9 +609,8 @@ function loadContactForm() {
   document.getElementById('contact-phone').value = contactData.phone || '';
   document.getElementById('contact-loc-en').value = contactData.location ? contactData.location.en : '';
   document.getElementById('contact-loc-ar').value = contactData.location ? contactData.location.ar : '';
-  document.getElementById('contact-linkedin').value = contactData.social ? contactData.social.linkedin : '';
+  document.getElementById('contact-facebook').value = contactData.social ? contactData.social.facebook : '';
   document.getElementById('contact-behance').value = contactData.social ? contactData.social.behance : '';
-  document.getElementById('contact-dribbble').value = contactData.social ? contactData.social.dribbble : '';
   document.getElementById('contact-instagram').value = contactData.social ? contactData.social.instagram : '';
 }
 
@@ -624,9 +623,8 @@ async function saveContact() {
       ar: document.getElementById('contact-loc-ar').value.trim()
     },
     social: {
-      linkedin: document.getElementById('contact-linkedin').value.trim(),
+      facebook: document.getElementById('contact-facebook').value.trim(),
       behance: document.getElementById('contact-behance').value.trim(),
-      dribbble: document.getElementById('contact-dribbble').value.trim(),
       instagram: document.getElementById('contact-instagram').value.trim()
     },
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -792,4 +790,94 @@ function exportData() {
   a.click();
   URL.revokeObjectURL(url);
   showToast('Data exported!', 'success');
+}
+
+// ============================================
+//  ADMIN LANGUAGE TOGGLE
+// ============================================
+let adminLang = 'en';
+
+const adminTranslations = {
+  en: {
+    dashboard: 'Dashboard',
+    projects: 'Projects',
+    certificates: 'Certificates',
+    about: 'About',
+    contact: 'Contact',
+    viewSite: 'View Site',
+    logout: 'Logout',
+    adminPanel: 'Admin Panel',
+    totalProjects: 'Total Projects',
+    totalCerts: 'Total Certificates',
+    totalImages: 'Total Images',
+    recentProjects: 'Recent Projects',
+    saveChanges: 'Save Changes',
+    addProject: 'Add Project',
+    addCertificate: 'Add Certificate',
+    exportData: 'Export Data'
+  },
+  ar: {
+    dashboard: 'لوحة التحكم',
+    projects: 'المشاريع',
+    certificates: 'الشهادات',
+    about: 'عني',
+    contact: 'التواصل',
+    viewSite: 'عرض الموقع',
+    logout: 'تسجيل الخروج',
+    adminPanel: 'لوحة الإدارة',
+    totalProjects: 'إجمالي المشاريع',
+    totalCerts: 'إجمالي الشهادات',
+    totalImages: 'إجمالي الصور',
+    recentProjects: 'المشاريع الأخيرة',
+    saveChanges: 'حفظ التغييرات',
+    addProject: 'إضافة مشروع',
+    addCertificate: 'إضافة شهادة',
+    exportData: 'تصدير البيانات'
+  }
+};
+
+function switchAdminLang(lang) {
+  adminLang = lang;
+
+  // Update button active state
+  document.querySelectorAll('.admin-lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+
+  // Set direction
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+  const t = adminTranslations[lang];
+
+  // Sidebar navigation
+  const navLinks = document.querySelectorAll('#sidebar-nav a');
+  const navKeys = ['dashboard', 'projects', 'certificates', 'about', 'contact'];
+  navLinks.forEach((link, i) => {
+    if (navKeys[i]) {
+      // Keep SVG, update text
+      const svg = link.querySelector('svg');
+      link.textContent = '';
+      if (svg) link.appendChild(svg);
+      link.appendChild(document.createTextNode(' ' + t[navKeys[i]]));
+    }
+  });
+
+  // Admin label
+  const adminLabel = document.querySelector('.admin-label');
+  if (adminLabel) adminLabel.textContent = t.adminPanel;
+
+  // Sidebar footer links
+  const footerLinks = document.querySelectorAll('.sidebar-footer > a');
+  if (footerLinks[0]) {
+    const svg0 = footerLinks[0].querySelector('svg');
+    footerLinks[0].textContent = '';
+    if (svg0) footerLinks[0].appendChild(svg0);
+    footerLinks[0].appendChild(document.createTextNode(' ' + t.viewSite));
+  }
+  if (footerLinks[1]) {
+    const svg1 = footerLinks[1].querySelector('svg');
+    footerLinks[1].textContent = '';
+    if (svg1) footerLinks[1].appendChild(svg1);
+    footerLinks[1].appendChild(document.createTextNode(' ' + t.logout));
+  }
 }

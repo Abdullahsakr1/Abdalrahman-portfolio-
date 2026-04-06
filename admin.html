@@ -306,6 +306,37 @@
 
     .sidebar-footer a:hover { color: var(--danger); }
 
+    /* Admin Language Toggle */
+    .admin-lang-switch {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .admin-lang-btn {
+      flex: 1;
+      padding: 6px 0;
+      border: 1px solid var(--border-color);
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .admin-lang-btn.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: #fff;
+    }
+
+    .admin-lang-btn:hover:not(.active) {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
     /* Main Content */
     .admin-main {
       flex: 1;
@@ -763,6 +794,10 @@
       </ul>
 
       <div class="sidebar-footer">
+        <div class="admin-lang-switch">
+          <button class="admin-lang-btn active" data-lang="en" onclick="switchAdminLang('en')">EN</button>
+          <button class="admin-lang-btn" data-lang="ar" onclick="switchAdminLang('ar')">AR</button>
+        </div>
         <a href="index.html" target="_blank">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           View Site
@@ -1052,18 +1087,13 @@
           </div>
 
           <div class="form-group">
-            <label for="contact-linkedin">LinkedIn URL</label>
-            <input type="url" id="contact-linkedin">
+            <label for="contact-facebook">Facebook URL</label>
+            <input type="url" id="contact-facebook">
           </div>
 
           <div class="form-group">
             <label for="contact-behance">Behance URL</label>
             <input type="url" id="contact-behance">
-          </div>
-
-          <div class="form-group">
-            <label for="contact-dribbble">Dribbble URL</label>
-            <input type="url" id="contact-dribbble">
           </div>
 
           <div class="form-group">

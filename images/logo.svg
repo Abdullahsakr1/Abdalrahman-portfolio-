@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4a853"/>
+      <stop offset="50%" style="stop-color:#e8c975"/>
+      <stop offset="100%" style="stop-color:#d4a853"/>
+    </linearGradient>
+  </defs>
+  <!-- A letterform -->
+  <path d="M100 25 L55 160 L72 160 L82 130 L118 130 L128 160 L145 160 Z M88 115 L100 65 L112 115 Z" fill="url(#gold)"/>
+  <!-- S integrated stroke -->
+  <path d="M78 75 C78 55, 122 55, 122 75 C122 95, 78 95, 78 115 C78 145, 122 145, 122 125" stroke="url(#gold)" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.4"/>
+</svg>

@@ -399,13 +399,15 @@ function sanitizeURL(url) {
 
 /* ============================================
    DYNAMIC CONTENT LOADING
-   Loads projects and certificates from
-   Firebase Firestore collections
+   Loads projects, certificates, about, and
+   contact from Firebase Firestore collections
    ============================================ */
 async function loadDynamicContent() {
   await Promise.all([
     loadProjects(),
-    loadCertificates()
+    loadCertificates(),
+    loadAbout(),
+    loadContact()
   ]);
 }
 
@@ -511,6 +513,84 @@ function renderCertificates() {
   }).join('');
 }
 
+/* ---- ABOUT (Firestore) ---- */
+let portfolioAbout = null;
+
+async function loadAbout() {
+  try {
+    const doc = await db.collection('about').doc('info').get();
+    if (doc.exists) {
+      portfolioAbout = doc.data();
+      applyAbout();
+    }
+  } catch (error) {
+    console.error('Error loading about from Firestore:', error);
+  }
+}
+
+function applyAbout() {
+  if (!portfolioAbout) return;
+  const lang = getLang();
+  const a = portfolioAbout;
+
+  // Name
+  const nameEl = document.querySelector('[data-i18n="about.name"]');
+  if (nameEl && a.name) nameEl.textContent = a.name[lang] || a.name.en || '';
+
+  // Role
+  const roleEl = document.querySelector('[data-i18n="about.role"]');
+  if (roleEl && a.role) roleEl.textContent = a.role[lang] || a.role.en || '';
+
+  // Badge
+  const badgeEl = document.querySelector('[data-i18n="about.badge"]');
+  if (badgeEl && a.badge) {
+    const badgeText = a.badge[lang] || a.badge.en || '';
+    badgeEl.textContent = badgeText;
+    badgeEl.style.display = badgeText ? '' : 'none';
+  }
+
+  // Paragraph 1
+  const p1El = document.querySelector('[data-i18n="about.p1"]');
+  if (p1El && a.p1) p1El.textContent = a.p1[lang] || a.p1.en || '';
+
+  // Paragraph 2
+  const p2El = document.querySelector('[data-i18n="about.p2"]');
+  if (p2El && a.p2) p2El.textContent = a.p2[lang] || a.p2.en || '';
+}
+
+/* ---- CONTACT (Firestore) ---- */
+let portfolioContact = null;
+
+async function loadContact() {
+  try {
+    const doc = await db.collection('contact').doc('info').get();
+    if (doc.exists) {
+      portfolioContact = doc.data();
+      applyContact();
+    }
+  } catch (error) {
+    console.error('Error loading contact from Firestore:', error);
+  }
+}
+
+function applyContact() {
+  if (!portfolioContact) return;
+  const lang = getLang();
+  const c = portfolioContact;
+
+  // Email
+  const emailEl = document.querySelector('[data-i18n="contact.email"]');
+  if (emailEl && c.email) emailEl.textContent = escapeHTML(c.email);
+
+  // Phone
+  const phoneEl = document.querySelector('[data-i18n="contact.phone"]');
+  if (phoneEl && c.phone) phoneEl.textContent = escapeHTML(c.phone);
+
+  // Location
+  const locEl = document.querySelector('[data-i18n="contact.location"]');
+  if (locEl && c.location) locEl.textContent = escapeHTML(c.location[lang] || c.location.en || '');
+}
+
 /* ============================================
    RE-RENDER ON LANGUAGE CHANGE
    Hook into the language system to re-render
@@ -526,6 +606,8 @@ window.applyTranslations = function(lang) {
   // Re-render dynamic content with new language
   renderProjects();
   renderCertificates();
+  applyAbout();
+  applyContact();
   // Re-init filter after re-render
   initPortfolioFilter();
 };
