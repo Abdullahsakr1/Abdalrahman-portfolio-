@@ -446,14 +446,16 @@ function renderProjects() {
     const title = escapeHTML(p.title ? (p.title[lang] || p.title.en || '') : '');
     const desc = escapeHTML(p.desc ? (p.desc[lang] || p.desc.en || '') : '');
     const cat = escapeHTML(p.categoryLabel ? (p.categoryLabel[lang] || p.categoryLabel.en || p.category) : p.category);
-    const img = sanitizeURL(p.image || 'images/project-branding.png');
+    // Use first image from media array, fallback to image field
+    const firstImage = getFirstMediaImage(p);
+    const img = sanitizeURL(firstImage || 'images/project-branding.png');
     const category = escapeHTML(p.category || '');
     const id = escapeHTML(p.id || 'project-' + idx);
 
     return `
       <article class="project-card" data-category="${category}" id="${id}">
         <div class="project-image">
-          <img src="${img}" alt="${title}" loading="lazy" width="600" height="375">
+          <img src="${img}" alt="${title}" loading="lazy">
           <div class="project-overlay">
             <a href="javascript:void(0)" class="project-overlay-btn" data-project-idx="${idx}">${viewText}</a>
           </div>
@@ -466,6 +468,47 @@ function renderProjects() {
       </article>
     `;
   }).join('');
+}
+
+/**
+ * Get the first image URL from a project's media array, with fallback to image field.
+ */
+function getFirstMediaImage(project) {
+  if (project.media && Array.isArray(project.media)) {
+    const firstImg = project.media.find(m => m.type === 'image');
+    if (firstImg) return firstImg.url;
+  }
+  return project.image || '';
+}
+
+/**
+ * Detect media type from a URL based on file extension.
+ */
+function detectMediaTypeFromURL(url) {
+  if (!url) return 'file';
+  const ext = url.split('.').pop().split('?')[0].toLowerCase();
+  const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico'];
+  const videoExts = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
+  if (imageExts.includes(ext)) return 'image';
+  if (videoExts.includes(ext)) return 'video';
+  return 'file';
+}
+
+/**
+ * Get file extension from URL or filename.
+ */
+function getFileExtension(url) {
+  if (!url) return '';
+  return url.split('.').pop().split('?')[0].toLowerCase();
+}
+
+/**
+ * Get the display name from a media item.
+ */
+function getMediaDisplayName(mediaItem) {
+  if (mediaItem.name) return mediaItem.name;
+  const parts = mediaItem.url.split('/');
+  return parts[parts.length - 1].split('?')[0] || 'File';
 }
 
 /* ---- CERTIFICATES (Firestore) ---- */
@@ -615,35 +658,64 @@ window.applyTranslations = function(lang) {
 /* ============================================
    PROJECT MODAL POPUP
    ============================================ */
+/* ============================================
+   MEDIA GALLERY STATE
+   ============================================ */
+let galleryCurrentSlide = 0;
+let galleryTotalSlides = 0;
+let galleryVisualMedia = []; // images + videos only (for slider)
+
 function initProjectModal() {
   const overlay = document.getElementById('project-modal-overlay');
   const closeBtn = document.getElementById('project-modal-close');
+  const prevBtn = document.getElementById('media-nav-prev');
+  const nextBtn = document.getElementById('media-nav-next');
 
   if (!overlay) return;
 
   // Close button
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
-      overlay.classList.remove('active');
-      document.body.style.overflow = '';
+      closeProjectModal();
     });
   }
 
   // Click overlay to close
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) {
-      overlay.classList.remove('active');
-      document.body.style.overflow = '';
+      closeProjectModal();
     }
   });
 
-  // Escape key to close
+  // Navigation buttons
+  if (prevBtn) prevBtn.addEventListener('click', () => galleryPrev());
+  if (nextBtn) nextBtn.addEventListener('click', () => galleryNext());
+
+  // Keyboard navigation
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && overlay.classList.contains('active')) {
-      overlay.classList.remove('active');
-      document.body.style.overflow = '';
-    }
+    if (!overlay.classList.contains('active')) return;
+    if (e.key === 'Escape') closeProjectModal();
+    if (e.key === 'ArrowLeft') galleryPrev();
+    if (e.key === 'ArrowRight') galleryNext();
   });
+
+  // Touch swipe support
+  let touchStartX = 0;
+  let touchEndX = 0;
+  const gallery = document.getElementById('media-gallery');
+  if (gallery) {
+    gallery.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    gallery.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) galleryNext();
+        else galleryPrev();
+      }
+    }, { passive: true });
+  }
 
   // Event delegation for "View Project" buttons
   document.addEventListener('click', (e) => {
@@ -655,24 +727,224 @@ function initProjectModal() {
     const project = portfolioProjects[idx];
     if (!project) return;
 
-    const lang = getLang();
-    const title = project.title ? (project.title[lang] || project.title.en) : '';
-    const desc = project.desc ? (project.desc[lang] || project.desc.en) : '';
-    const cat = project.categoryLabel ? (project.categoryLabel[lang] || project.categoryLabel.en) : project.category;
-    const img = sanitizeURL(project.image || '');
-
-    // Use textContent (safe) for text fields
-    document.getElementById('project-modal-title').textContent = title;
-    document.getElementById('project-modal-desc').textContent = desc;
-    document.getElementById('project-modal-cat').textContent = cat;
-    // Only use innerHTML for the image with a sanitized URL
-    document.getElementById('project-modal-image').innerHTML = img
-      ? `<img src="${img}" alt="${escapeHTML(title)}" style="width:100%;border-radius:12px;">`
-      : '';
-
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    openProjectModal(project);
   });
+}
+
+function closeProjectModal() {
+  const overlay = document.getElementById('project-modal-overlay');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+  // Pause any playing videos
+  const videos = overlay.querySelectorAll('video');
+  videos.forEach(v => { v.pause(); v.currentTime = 0; });
+}
+
+function openProjectModal(project) {
+  const overlay = document.getElementById('project-modal-overlay');
+  const lang = getLang();
+  const title = project.title ? (project.title[lang] || project.title.en) : '';
+  const desc = project.desc ? (project.desc[lang] || project.desc.en) : '';
+  const cat = project.categoryLabel ? (project.categoryLabel[lang] || project.categoryLabel.en) : project.category;
+
+  // Set text content
+  document.getElementById('project-modal-title').textContent = title;
+  document.getElementById('project-modal-desc').textContent = desc;
+  document.getElementById('project-modal-cat').textContent = cat;
+
+  // Build media array (backward compatible)
+  let media = [];
+  if (project.media && Array.isArray(project.media) && project.media.length > 0) {
+    media = project.media.map(m => ({
+      type: m.type || detectMediaTypeFromURL(m.url),
+      url: m.url,
+      name: m.name || ''
+    }));
+  } else if (project.image) {
+    media = [{ type: 'image', url: project.image, name: '' }];
+  }
+
+  // Separate visual media (images/videos) from files
+  galleryVisualMedia = media.filter(m => m.type === 'image' || m.type === 'video');
+  const fileMedia = media.filter(m => m.type === 'file');
+
+  // Build gallery slides
+  buildGallerySlides(galleryVisualMedia, title);
+
+  // Build file download chips
+  buildFileChips(fileMedia);
+
+  // Show modal
+  galleryCurrentSlide = 0;
+  galleryTotalSlides = galleryVisualMedia.length;
+  updateGalleryPosition();
+
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function buildGallerySlides(visualMedia, title) {
+  const track = document.getElementById('media-slides-track');
+  const gallery = document.getElementById('media-gallery');
+  const dotsContainer = document.getElementById('media-dots');
+  const counter = document.getElementById('media-counter');
+  const prevBtn = document.getElementById('media-nav-prev');
+  const nextBtn = document.getElementById('media-nav-next');
+
+  if (visualMedia.length === 0) {
+    // No visual media — hide gallery
+    gallery.style.display = 'none';
+    dotsContainer.style.display = 'none';
+    return;
+  }
+
+  gallery.style.display = '';
+  dotsContainer.style.display = visualMedia.length > 1 ? 'flex' : 'none';
+
+  // Show/hide nav buttons
+  const showNav = visualMedia.length > 1;
+  prevBtn.style.display = showNav ? '' : 'none';
+  nextBtn.style.display = showNav ? '' : 'none';
+  counter.style.display = showNav ? '' : 'none';
+
+  // Build slides HTML
+  track.innerHTML = visualMedia.map((m, i) => {
+    if (m.type === 'video') {
+      const sanitized = sanitizeURL(m.url);
+      return `<div class="media-slide">
+        <video controls preload="metadata" playsinline>
+          <source src="${sanitized}" type="video/${getFileExtension(m.url) || 'mp4'}">
+          Your browser does not support the video tag.
+        </video>
+      </div>`;
+    } else {
+      const sanitized = sanitizeURL(m.url);
+      const alt = escapeHTML(m.name || title || 'Project image');
+      return `<div class="media-slide">
+        <img src="${sanitized}" alt="${alt} ${i + 1}">
+      </div>`;
+    }
+  }).join('');
+
+  // Build dots
+  dotsContainer.innerHTML = visualMedia.map((_, i) =>
+    `<div class="media-dot${i === 0 ? ' active' : ''}" data-slide="${i}"></div>`
+  ).join('');
+
+  // Dot click listeners
+  dotsContainer.querySelectorAll('.media-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      galleryCurrentSlide = parseInt(dot.getAttribute('data-slide'));
+      updateGalleryPosition();
+    });
+  });
+}
+
+function buildFileChips(fileMedia) {
+  const section = document.getElementById('media-files-section');
+  const list = document.getElementById('media-files-list');
+
+  if (fileMedia.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = '';
+  list.innerHTML = fileMedia.map((f, i) => {
+    const name = escapeHTML(getMediaDisplayName(f));
+    const ext = getFileExtension(f.url);
+    return `<a href="javascript:void(0)" onclick="downloadFile(${i})" class="media-file-chip">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span>${name}</span>
+      <span class="file-ext">${escapeHTML(ext)}</span>
+    </a>`;
+  }).join('');
+
+  // Store file media references for download
+  window._currentFileMedia = fileMedia;
+}
+
+/**
+ * Download a file from a cross-origin URL (Cloudinary) by fetching as blob.
+ * Falls back to opening in new tab if fetch fails.
+ */
+function downloadFile(index) {
+  const fileMedia = window._currentFileMedia;
+  if (!fileMedia || !fileMedia[index]) return;
+
+  const f = fileMedia[index];
+  const url = f.url;
+  const filename = f.name || getMediaDisplayName(f);
+
+  // Try fetch + blob for cross-origin download
+  fetch(url, { mode: 'cors' })
+    .then(response => {
+      if (!response.ok) throw new Error('Network response was not ok');
+      return response.blob();
+    })
+    .then(blob => {
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    })
+    .catch(() => {
+      // Fallback: open in new tab
+      window.open(url, '_blank');
+    });
+}
+
+function updateGalleryPosition() {
+  const track = document.getElementById('media-slides-track');
+  const counter = document.getElementById('media-counter');
+  const dotsContainer = document.getElementById('media-dots');
+
+  if (!track || galleryTotalSlides === 0) return;
+
+  // Clamp
+  galleryCurrentSlide = Math.max(0, Math.min(galleryCurrentSlide, galleryTotalSlides - 1));
+
+  // Move track
+  track.style.transform = `translateX(-${galleryCurrentSlide * 100}%)`;
+
+  // Update counter (use LTR marks so numbers don't reverse in RTL)
+  if (counter && galleryTotalSlides > 1) {
+    counter.textContent = `\u200E${galleryCurrentSlide + 1} / ${galleryTotalSlides}\u200E`;
+  }
+
+  // Update dots
+  if (dotsContainer) {
+    dotsContainer.querySelectorAll('.media-dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === galleryCurrentSlide);
+    });
+  }
+
+  // Pause videos that are not visible
+  const slides = track.querySelectorAll('.media-slide');
+  slides.forEach((slide, i) => {
+    const video = slide.querySelector('video');
+    if (video && i !== galleryCurrentSlide) {
+      video.pause();
+    }
+  });
+}
+
+function galleryNext() {
+  if (galleryCurrentSlide < galleryTotalSlides - 1) {
+    galleryCurrentSlide++;
+    updateGalleryPosition();
+  }
+}
+
+function galleryPrev() {
+  if (galleryCurrentSlide > 0) {
+    galleryCurrentSlide--;
+    updateGalleryPosition();
+  }
 }
 
 /* ============================================

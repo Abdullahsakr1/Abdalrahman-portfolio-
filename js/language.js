@@ -273,18 +273,27 @@ function applyTranslations(lang) {
  * Update meta tags for SEO in the current language
  */
 function updateMetaTags(lang) {
-  const metaDesc = document.querySelector('meta[name="description"]');
-  const ogTitle = document.querySelector('meta[property="og:title"]');
-  const ogDesc = document.querySelector('meta[property="og:description"]');
+  const metaDesc = document.querySelector('meta[name="description"]:not([lang])');
+  const ogTitle = document.querySelector('meta[property="og:title"]:not([lang])');
+  const ogDesc = document.querySelector('meta[property="og:description"]:not([lang])');
+  const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+  const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+  const titleEl = document.querySelector('title');
 
   if (lang === 'ar') {
-    if (metaDesc) metaDesc.setAttribute('content', 'عبدالرحمن - مصمم جرافيك إبداعي متخصص في تصميم العلامات التجارية، السوشيال ميديا، الموشن جرافيك وتصميم واجهات المستخدم باستخدام أدوات Adobe.');
+    if (titleEl) titleEl.textContent = 'عبدالرحمن | مصمم جرافيك إبداعي - Abdalrahman';
+    if (metaDesc) metaDesc.setAttribute('content', 'عبدالرحمن - مصمم جرافيك إبداعي متخصص في تصميم الهوية البصرية، تصميم سوشيال ميديا، موشن جرافيك، تصميم مطبوعات وتصميم واجهات المستخدم. متاح للعمل الحر - مصر، كفر الشيخ.');
     if (ogTitle) ogTitle.setAttribute('content', 'عبدالرحمن | مصمم جرافيك إبداعي');
-    if (ogDesc) ogDesc.setAttribute('content', 'بورتفوليو مصمم جرافيك محترف - تصميم العلامات التجارية، السوشيال ميديا، الموشن جرافيك');
+    if (ogDesc) ogDesc.setAttribute('content', 'بورتفوليو مصمم جرافيك محترف - تصميم هوية بصرية، سوشيال ميديا، موشن جرافيك، مطبوعات وتصميم واجهات');
+    if (twitterTitle) twitterTitle.setAttribute('content', 'عبدالرحمن | مصمم جرافيك إبداعي');
+    if (twitterDesc) twitterDesc.setAttribute('content', 'بورتفوليو مصمم جرافيك محترف - تصميم هوية بصرية، سوشيال ميديا، موشن جرافيك');
   } else {
-    if (metaDesc) metaDesc.setAttribute('content', 'Abdalrahman - Creative graphic designer specializing in branding, social media design, motion graphics, and UI design using Adobe tools.');
+    if (titleEl) titleEl.textContent = 'Abdalrahman | Creative Graphic Designer - مصمم جرافيك إبداعي';
+    if (metaDesc) metaDesc.setAttribute('content', 'Abdalrahman - Creative graphic designer specializing in branding, social media design, motion graphics, print design and UI design using Adobe Photoshop, Illustrator & InDesign. Available for freelance work.');
     if (ogTitle) ogTitle.setAttribute('content', 'Abdalrahman | Creative Graphic Designer');
-    if (ogDesc) ogDesc.setAttribute('content', 'Professional graphic designer portfolio - branding, social media, motion graphics & UI design');
+    if (ogDesc) ogDesc.setAttribute('content', 'Professional graphic designer portfolio - branding, social media design, motion graphics, print design & UI design. Available for freelance projects.');
+    if (twitterTitle) twitterTitle.setAttribute('content', 'Abdalrahman | Creative Graphic Designer - مصمم جرافيك إبداعي');
+    if (twitterDesc) twitterDesc.setAttribute('content', 'Professional graphic designer portfolio - branding, social media, motion graphics & UI design | بورتفوليو مصمم جرافيك محترف');
   }
 }
 

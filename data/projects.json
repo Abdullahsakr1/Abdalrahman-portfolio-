@@ -5,7 +5,10 @@
     "desc": { "en": "Complete brand identity design including logo, business cards, and stationery for a luxury fashion brand.", "ar": "تصميم هوية بصرية كاملة تشمل الشعار وبطاقات العمل والقرطاسية لعلامة أزياء فاخرة." },
     "category": "branding",
     "categoryLabel": { "en": "Branding", "ar": "علامات تجارية" },
-    "image": "images/project-branding.png"
+    "image": "images/project-branding.png",
+    "media": [
+      { "type": "image", "url": "images/project-branding.png", "name": "project-branding.png" }
+    ]
   },
   {
     "id": "project-2",
@@ -13,7 +16,10 @@
     "desc": { "en": "Vibrant social media campaign design with cohesive visual storytelling for a modern restaurant.", "ar": "تصميم حملة سوشيال ميديا نابضة بالحياة مع سرد بصري متماسك لمطعم عصري." },
     "category": "social",
     "categoryLabel": { "en": "Social Media", "ar": "سوشيال ميديا" },
-    "image": "images/project-social.png"
+    "image": "images/project-social.png",
+    "media": [
+      { "type": "image", "url": "images/project-social.png", "name": "project-social.png" }
+    ]
   },
   {
     "id": "project-3",
@@ -21,7 +27,10 @@
     "desc": { "en": "Dynamic motion graphics showreel featuring 3D text animation and particle effects.", "ar": "عرض موشن جرافيك ديناميكي يتضمن رسوم متحركة ثلاثية الأبعاد وتأثيرات الجزيئات." },
     "category": "motion",
     "categoryLabel": { "en": "Motion", "ar": "موشن" },
-    "image": "images/project-motion.png"
+    "image": "images/project-motion.png",
+    "media": [
+      { "type": "image", "url": "images/project-motion.png", "name": "project-motion.png" }
+    ]
   },
   {
     "id": "project-4",
@@ -29,7 +38,10 @@
     "desc": { "en": "Clean and intuitive mobile banking app interface with a modern purple gradient design system.", "ar": "واجهة تطبيق بنكي نظيفة وبديهية مع نظام تصميم حديث بتدرج لوني بنفسجي." },
     "category": "ui",
     "categoryLabel": { "en": "UI Design", "ar": "تصميم واجهات" },
-    "image": "images/project-ui.png"
+    "image": "images/project-ui.png",
+    "media": [
+      { "type": "image", "url": "images/project-ui.png", "name": "project-ui.png" }
+    ]
   },
   {
     "id": "project-5",
@@ -37,7 +49,10 @@
     "desc": { "en": "Professional color-graded promo video with cinematic transitions and visual effects.", "ar": "فيديو ترويجي احترافي بتصحيح ألوان سينمائي وانتقالات ومؤثرات بصرية." },
     "category": "video",
     "categoryLabel": { "en": "Video", "ar": "فيديو" },
-    "image": "images/project-video.png"
+    "image": "images/project-video.png",
+    "media": [
+      { "type": "image", "url": "images/project-video.png", "name": "project-video.png" }
+    ]
   },
   {
     "id": "project-6",
@@ -45,6 +60,9 @@
     "desc": { "en": "Elegant magazine layout design with modern typography for a fashion editorial spread.", "ar": "تصميم تخطيط مجلة أنيق بطباعة حديثة لنشر تحرير أزياء." },
     "category": "print",
     "categoryLabel": { "en": "Print", "ar": "مطبوعات" },
-    "image": "images/project-print.png"
+    "image": "images/project-print.png",
+    "media": [
+      { "type": "image", "url": "images/project-print.png", "name": "project-print.png" }
+    ]
   }
 ]

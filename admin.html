@@ -600,6 +600,234 @@
       display: none;
     }
 
+    /* ---- MULTI-MEDIA UPLOAD ---- */
+    .media-upload-container {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      background: var(--bg-tertiary);
+    }
+
+    .media-drop-zone {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .media-drop-zone:hover,
+    .media-drop-zone.drag-over {
+      border-color: var(--accent-primary);
+      background: rgba(212, 168, 83, 0.05);
+    }
+
+    .media-drop-zone.drag-over {
+      transform: scale(1.01);
+    }
+
+    .media-drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .media-drop-zone svg {
+      width: 36px;
+      height: 36px;
+      stroke: var(--text-muted);
+      fill: none;
+      stroke-width: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .media-drop-zone p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .media-drop-zone .accent { color: var(--accent-primary); font-weight: 600; }
+
+    .media-hint {
+      font-size: 0.7rem !important;
+      color: var(--text-muted) !important;
+      margin-top: 6px;
+      opacity: 0.7;
+    }
+
+    /* Media Items List */
+    .media-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .media-items-list:empty {
+      margin-bottom: 0;
+    }
+
+    .media-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-fast);
+      cursor: grab;
+      user-select: none;
+    }
+
+    .media-item:hover {
+      border-color: var(--border-hover);
+    }
+
+    .media-item.dragging {
+      opacity: 0.5;
+      border-color: var(--accent-primary);
+      cursor: grabbing;
+    }
+
+    .media-item-drag {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 4px;
+      cursor: grab;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .media-item-drag span {
+      display: block;
+      width: 14px;
+      height: 2px;
+      background: currentColor;
+      border-radius: 1px;
+    }
+
+    .media-item-preview {
+      width: 48px;
+      height: 36px;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .media-item-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .media-item-preview svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--accent-primary);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .media-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .media-item-name {
+      font-size: 0.8rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-primary);
+    }
+
+    .media-item-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .media-type-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-radius: 3px;
+      line-height: 1.4;
+    }
+
+    .media-type-badge.type-image {
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
+    }
+
+    .media-type-badge.type-video {
+      background: rgba(52, 152, 219, 0.15);
+      color: #3498db;
+    }
+
+    .media-type-badge.type-file {
+      background: rgba(155, 89, 182, 0.15);
+      color: #9b59b6;
+    }
+
+    .media-item-size {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .media-item-remove {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(231, 76, 60, 0.1);
+      color: var(--danger);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      flex-shrink: 0;
+      border: none;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .media-item-remove:hover {
+      background: rgba(231, 76, 60, 0.3);
+    }
+
+    .media-item-progress {
+      width: 100%;
+      height: 3px;
+      background: var(--bg-tertiary);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .media-item-progress-bar {
+      height: 100%;
+      background: var(--accent-gradient);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
     /* Toast */
     .toast {
       position: fixed;
@@ -918,13 +1146,23 @@
           </div>
 
           <div class="form-group">
-            <label>Project Image</label>
-            <div class="upload-area" id="proj-upload-area">
-              <input type="file" id="proj-image-input" accept="image/*">
-              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              <p>Click to upload or drag image here</p>
-              <p class="accent">Recommended: 600×375</p>
-              <img class="upload-preview" id="proj-preview">
+            <label>Project Media</label>
+            <div class="media-upload-container" id="media-upload-container">
+              <!-- Media list (populated by JS) -->
+              <div class="media-items-list" id="media-items-list"></div>
+
+              <!-- Drop zone / Add media area -->
+              <div class="media-drop-zone" id="media-drop-zone">
+                <input type="file" id="media-file-input" multiple accept="image/*,video/*,.pdf,.ai,.psd,.zip,.docx,.doc,.eps,.svg">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <p>Drop files here or <span class="accent">browse</span></p>
+                <p class="media-hint">Images, Videos, PDF, AI, PSD, ZIP, DOCX</p>
+              </div>
+              
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-add-media" style="margin-top:12px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                + Add More Media
+              </button>
             </div>
           </div>
 

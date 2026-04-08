@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://abdelrahmandesginer.com/sitemap.xml
+
+# Disallow admin
+Disallow: /admin.html
+
+# Allow all media
+Allow: /images/
+Allow: /videos/
+Allow: /files/
+Allow: /css/
+Allow: /js/
+
+# Crawl delay
+Crawl-delay: 1
